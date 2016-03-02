@@ -5,9 +5,10 @@
 void llenar_tablero(char**);
 
 
-int main(){
+int main(int argc, char*argv[]){
 	int contador_turnos = 2;
 	int size = 8;
+	char movement[5];
 
 	char **matriz;
 	matriz = (char **)malloc (size*sizeof(char *));
@@ -22,54 +23,71 @@ int main(){
 		int y = 10;
 		int x = 5;
 		clear();
-	if (contador_turnos % 2 == 0){
-		initscr();
-  		(void)echo();
-  		move(0, 10);
-  		printw("Es turno del jugador #1: ");
-  		move(x,y);
-  		move(x++, y);
-  	for (int i = 0; i < size; i++){
-    	for (int j = 0; j < size; j++){
-      		start_color();
-      		init_pair(1, COLOR_BLUE, COLOR_BLACK);
-      		attron(COLOR_PAIR(1));
-      		printw("[%c] ", matriz[i][j]);
-      		refresh();
-    	}
-    	printw("\n");
-    	move(x++, y);
-  	}
-  	refresh();
-  	getch();
-  	contador_turnos++;	
-	}else{
-		initscr();
-  		(void)echo();
-  		move(0, 10);
-  		printw("Es turno del jugador #2: ");
-  		move(x,y);
-  		move(x++, y);
-  	for (int i = 0; i < size; i++){
-    	for (int j = 0; j < size; j++){
-      		start_color();
-      		init_pair(1, COLOR_GREEN, COLOR_BLACK);
-      		attron(COLOR_PAIR(1));
-      		printw("[%c] ", matriz[i][j]);
-      		refresh();
-    	}
-    	printw("\n");
-    	move(x++, y);
-  	}
-  	refresh();
-  	getch();
-  	contador_turnos++;
-	}
+
+		if (contador_turnos % 2 == 0){
+			initscr();
+  			(void)echo();
+
+  			move(0, 10);
+  			printw("Es turno del jugador #1");
+  			printw("\n");
+  			addstr("Ingrese el movimiento: ");
+  			getnstr(movement, sizeof(movement) - 1);
+
+  			refresh();
+  			move(x,y);
+  			move(x++, y);
+  		for (int i = 0; i < size; i++){
+    		for (int j = 0; j < size; j++){
+      			start_color();
+      			init_pair(1, COLOR_BLUE, COLOR_BLACK);
+      			attron(COLOR_PAIR(1));
+
+      			printw("[%c] ", matriz[i][j]);
+      			refresh();
+    		}
+    		printw("\n");
+    		move(x++, y);
+  		}
+  		refresh();
+  		getch();
+
+  		contador_turnos++;	
+		}else{
+			initscr();
+  			(void)echo();
+
+  			move(0, 10);
+  			printw("Es turno del jugador #2: ");
+  			printw("\n");
+  			addstr("Ingrese el movimiento: ");
+  			getnstr(movement, sizeof(movement) - 1);
+  			refresh();
+
+  			move(x,y);
+  			move(x++, y);
+  		for (int i = 0; i < size; i++){
+    		for (int j = 0; j < size; j++){
+      			start_color();
+      			init_pair(1, COLOR_GREEN, COLOR_BLACK);
+      			attron(COLOR_PAIR(1));
+
+      			printw("[%c] ", matriz[i][j]);
+      			refresh();
+    		}
+    		printw("\n");
+    		move(x++, y);
+  		}
+  		refresh();
+  		getch();
+  		
+  		contador_turnos++;
+		}
 	}
 
   	endwin();
 	return 0;
-  } 
+}
 
   void llenar_tablero(char** matriz){
 	int size = 8;
