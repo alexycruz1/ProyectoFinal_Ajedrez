@@ -97,17 +97,17 @@ int main(){
 	for (int i = 0; i < size; i++){
 		for (int j = 0; j < size; j++){
 			if (i == size - 2){//peones
-				matriz[i][j] = 'P';
+				matriz[i][j] = 'p';
 			}else if((i == size - 1 && j == 0) || (i == size - 1 && j == size - 1)){//torres
-				matriz[i][j] = 'T';
+				matriz[i][j] = 't';
 			}else if ((i == size - 1 && j == 1) || (i == size - 1 && j == size - 2)){//Caballos
-				matriz[i][j] = 'C';
+				matriz[i][j] = 'c';
 			}else if ((i == size - 1 && j == 2) || (i == size - 1 && j == size - 3)){//Alfiles
-				matriz[i][j] = 'A';
+				matriz[i][j] = 'a';
 			}else if ((i == size - 1 && j == 3)){//Dama
-				matriz[i][j] = 'D';
+				matriz[i][j] = 'd';
 			}else if ((i == size - 1 && j == 4)){//rey
-				matriz[i][j] = 'R';
+				matriz[i][j] = 'r';
 			}else if(i == 2 || i == 3 || i == 4 || i == 5 || i == 6){
 				matriz[i][j] = '.';
 			}
