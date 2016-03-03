@@ -4,7 +4,7 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-bool entrada_movida(char[], int);
+bool verificar_pieza(char[], int, int);
 
 int main(){
 	int size = 5;
@@ -15,40 +15,42 @@ int main(){
 	cout << movement;
 	cout << endl;
 
-	if (entrada_movida(movement, size)){
-		cout << "Funciona";
-	}
+	verificar_pieza(movement, size, 2);
+	
 
 	return 0;
 }
 
-bool entrada_movida(char movement[], int size){// 48 a 57 son numeros = 65 a 72 de la A a la H == 97 a 104
-	int nums = 0;
-	int chars = 0;
-	char temp;
-	bool movim_correcto = false;
+bool verificar_pieza(char movement[], int size, int contador_turnos){//65 a 72 de la A a la H == 97 a 104 minusculas
+	int x1, y1, x2, y2;
 
-	if (movement[0] >= 48 && movement[0] <= 57){
-		nums++;
+	if (contador_turnos % 2 == 0){//pieza debe ser mayuscula, turno jugador 1
+		x1 = movement[0];
+		y1 = movement[1];
+		x2 = movement[2];
+		y2 = movement[3];
+		x1 = x1 - 49;
+		y1 = y1 - 97;
+		x2 = x2 - 49;
+		y2 = y2 - 97;
+
+		x1 = (7 - x1);
+		x2 = (7 - x2);
+		int pieza = 'P';
+		cout << pieza;
+		cout << endl;
+
+		cout << x1 << "-" << y1 << "-" << x2 << "-" << y2;
 	}
-
-	if ((movement[1] >= 65 && movement[1] <= 72) || (movement[1] >= 97 && movement[1] <= 104)){
-		chars++;
-	}
-
-	if (movement[2] >= 48 && movement[2] <= 57){
-		nums++;
-	}
-
-	if ((movement[1] >= 65 && movement[1] <= 72) || (movement[1] >= 97 && movement[1] <= 104)){
-		chars++;	
-	}
-
-	if (nums == 2 && chars == 2){
-		movim_correcto = true;
-	}else{
-		movim_correcto = false;
-	}
-
-	return movim_correcto;
 }
+
+/*	   A  B  C  D  E  F  G  H
+	8 [T][C][A][D][R][A][C][T] 8
+	7 [P][P][P][P][P][P][P][P] 7
+	6 [.][.][.][.][.][.][.][.] 6
+	5 [.][.][.][.][.][.][.][.] 5
+	4 [.][.][.][.][.][.][.][.] 4
+	3 [.][.][.][.][.][.][.][.] 3
+	2 [P][P][P][P][P][P][P][P] 2
+	1 [T][C][A][D][R][A][C][T] 1
+	   A  B  C  D  E  F  G  H*/
