@@ -4,7 +4,7 @@
 
 void llenar_tablero(char**);
 void ciclo_juego();
-bool entrada_movida(char[], int, int);
+bool entrada_movida(char[], int);
 bool verificar_pieza_mayus(int, int, char**);
 char traer_char(int, int, char**);
 void mover(int, int, int, int, char, char**);
@@ -95,7 +95,7 @@ void ciclo_juego(){//juego completo
   		addstr("Ingrese el movimiento: ");
   		getnstr(movement, sizeof(movement) - 1);
 
-  		if (entrada_movida(movement, size_movement, contador_turnos)){//lo de abajo depende de esto
+  		if (entrada_movida(movement, size_movement)){//lo de abajo depende de esto
   			int x1, y1, x2, y2;
 
 			if (contador_turnos % 2 == 0){//pieza debe ser mayuscula, turno jugador 1
@@ -131,8 +131,10 @@ void ciclo_juego(){//juego completo
 			}
 
 			}else{
-
+		
 			}	
+  		}else{
+  			contador_turnos++;
   		}
 
 
@@ -183,7 +185,7 @@ void ciclo_juego(){//juego completo
   		move(15, 10);
   		addstr("Ingrese el movimiento: ");
   		getnstr(movement, sizeof(movement) - 1);
-  		entrada_movida(movement, size_movement, contador_turnos);
+  		entrada_movida(movement, size_movement);
 
   		refresh();
   		
@@ -237,7 +239,7 @@ void llenar_tablero(char** matriz){
 	}
 }
 
-bool entrada_movida(char movement[], int size, int contador_turnos){// 48 a 57 son numeros = 65 a 72 de la A a la H == 97 a 104 minusculas
+bool entrada_movida(char movement[], int size){// 48 a 57 son numeros = 65 a 72 de la A a la H == 97 a 104 minusculas
 	int nums = 0;
 	int chars = 0;
 	char temp;
