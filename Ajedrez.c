@@ -4,13 +4,16 @@
 
 void llenar_tablero(char**);
 void ciclo_juego();
-bool entrada_movida(char[], int);
+bool entrada_movida(char[], int, int);
 bool verificar_pieza_mayus(int, int, char**);
 char traer_char(int, int, char**);
 void mover(int, int, int, int, char, char**);
 bool mover_peon(int, int, int, int, char**);
 bool mover_torre(int, int, int, int, char**);
-
+bool mover_alfil(int, int, int, int, char**);
+bool mover_caballo(int, int, int, int, char**);
+bool mover_dama(int, int, int, int, char**);
+bool mover_rey(int, int, int, int, char**);
 
 
 int main(int argc, char*argv[]){
@@ -92,46 +95,45 @@ void ciclo_juego(){//juego completo
   		addstr("Ingrese el movimiento: ");
   		getnstr(movement, sizeof(movement) - 1);
 
-  		if (entrada_movida(movement, size_movement)){//lo de abajo depende de esto
+  		if (entrada_movida(movement, size_movement, contador_turnos)){//lo de abajo depende de esto
   			int x1, y1, x2, y2;
 
-		if (contador_turnos % 2 == 0){//pieza debe ser mayuscula, turno jugador 1
-			//convertir entrada en coordenadas
-			x1 = movement[0];
-			y1 = movement[1];
-			x2 = movement[2];
-			y2 = movement[3];
+			if (contador_turnos % 2 == 0){//pieza debe ser mayuscula, turno jugador 1
+				//convertir entrada en coordenadas
+				x1 = movement[1];
+				y1 = movement[0];
+				x2 = movement[3];
+				y2 = movement[2];
 
-			x1 = x1 - 49;
-			if (y1 >= 65 && y1 <= 72){
-				y1 = y1 - 65;
-			}else{
-				y1 = y1 - 97; 
-			}
+				x1 = x1 - 49;
+				if (y1 >= 65 && y1 <= 72){
+					y1 = y1 - 65;
+				}else{
+					y1 = y1 - 97; 
+				}
 
-			x2 = x2 - 49;
-			if (y2 >= 65 && y2 <= 72){
-				y2 = y2 - 65;
-			}else{
-				y2 = y2 - 97; 
-			}
+				x2 = x2 - 49;
+				if (y2 >= 65 && y2 <= 72){
+					y2 = y2 - 65;
+				}else{
+					y2 = y2 - 97; 
+				}
 
-			x1 = (7 - x1);
-			x2 = (7 - x2);
+				x1 = (7 - x1);
+				x2 = (7 - x2);
 
-		//verificar pieza que esta en esa posicion.
-			if (verificar_pieza_mayus(x1, y1, matriz)){
+			//verificar pieza que esta en esa posicion y que coordenadas no esten fuera.
+			if ((verificar_pieza_mayus(x1, y1, matriz))){
+
 				char pieza;
 				pieza = traer_char(x1, y1, matriz);
 				mover(x1, y1, x2, y2, pieza, matriz);
 			}
 
-		}else{
+			}else{
 
-		}	
+			}	
   		}
-  		
-  		
 
 
   		refresh();
@@ -181,7 +183,7 @@ void ciclo_juego(){//juego completo
   		move(15, 10);
   		addstr("Ingrese el movimiento: ");
   		getnstr(movement, sizeof(movement) - 1);
-  		entrada_movida(movement, size_movement);
+  		entrada_movida(movement, size_movement, contador_turnos);
 
   		refresh();
   		
@@ -235,25 +237,25 @@ void llenar_tablero(char** matriz){
 	}
 }
 
-bool entrada_movida(char movement[], int size){// 48 a 57 son numeros = 65 a 72 de la A a la H == 97 a 104 minusculas
+bool entrada_movida(char movement[], int size, int contador_turnos){// 48 a 57 son numeros = 65 a 72 de la A a la H == 97 a 104 minusculas
 	int nums = 0;
 	int chars = 0;
 	char temp;
 	bool movim_correcto = false;
 
-	if (movement[0] >= 48 && movement[0] <= 57){
+	if (movement[1] >= 48 && movement[1] <= 57){
 		nums++;
 	}
 
-	if ((movement[1] >= 65 && movement[1] <= 72) || (movement[1] >= 97 && movement[1] <= 104)){
+	if ((movement[0] >= 65 && movement[0] <= 72) || (movement[0] >= 97 && movement[0] <= 104)){
 		chars++;
 	}
 
-	if (movement[2] >= 48 && movement[2] <= 57){
+	if (movement[3] >= 48 && movement[3] <= 56){
 		nums++;
 	}
 
-	if ((movement[1] >= 65 && movement[1] <= 72) || (movement[1] >= 97 && movement[1] <= 104)){
+	if ((movement[2] >= 65 && movement[2] <= 72) || (movement[2] >= 97 && movement[2] <= 104)){
 		chars++;	
 	}
 
@@ -296,6 +298,26 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz){
 			matriz[x2][y2] = 'T';
 			matriz[x1][y1] = '.';
 		}
+	}else if (pieza == 'A'){
+		if (mover_alfil(x1, y1, x2, y2, matriz)){
+			matriz[x2][y2] = 'A';
+			matriz[x1][y1] = '.';
+		}
+	}else if (pieza == 'C'){
+		if (mover_caballo(x1, y1, x2, y2, matriz)){
+			matriz[x2][y2] = 'C';
+			matriz[x1][y1] = '.';
+		}
+	}else if (pieza == 'D'){
+		if (mover_dama(x1, y1, x2, y2, matriz)){
+			matriz[x2][y2] = 'D';
+			matriz[x1][y1] = '.';
+		}
+	}else if (pieza == 'R'){
+		if (mover_rey(x1, y1, x2, y2, matriz)){
+			matriz[x2][y2] = 'R';
+			matriz[x1][y1] = '.';
+		}
 	}
 }
 
@@ -335,10 +357,13 @@ bool mover_peon(int x1, int y1, int x2, int y2, char** matriz){
 
 bool mover_torre(int x1, int y1, int x2, int y2, char** matriz){
 	bool mover = false;
-	int pieza_encontrada = 0;
+	int pieza_encontrada = 1;
 	int x1_temp = x1;
-	int x2_temp2 = x2;
+	int x2_temp = x2;
+	int y1_temp = y1;
+	int y2_temp = y2;
 	x1_temp++;
+	y1_temp++;
 
 	if (matriz[x2][y2] == 'P'){//verificar que no coma piezas de su mismo color.
 		pieza_encontrada++;
@@ -354,22 +379,217 @@ bool mover_torre(int x1, int y1, int x2, int y2, char** matriz){
 		pieza_encontrada++;
 	}
 
-	if ((y1 == y2)){//verificar si mueve en la misma columna
-		for (x1_temp; x1_temp < x2_temp2; x1_temp++){
+	if ((y1 == y2 && x1 != x2) || (y1 != y2 && x1 == x2)){//verificar si mueve en la misma columna o  misma fila
+		for (x1_temp; x1_temp < x2_temp; x1_temp++){
 			if (matriz[x1_temp][y1] != '.'){
 				pieza_encontrada++;
 			}
 		}
+
+		for (y1_temp; y1_temp < y2_temp; y1_temp++){
+			if (matriz[x1][y1_temp] != '.'){
+				pieza_encontrada++;
+			}
+		}
+
+		pieza_encontrada--;
+	}
 
 		if(pieza_encontrada == 0){
 			mover = true;		
 		}else{
 			mover = false;
 		}	
+	return mover;
+}
+
+bool mover_alfil(int x1, int y1, int x2, int y2, char** matriz){
+	bool mover = false;
+	int pieza_encontrada = 1;
+	int x1_temp = x1;
+	int x2_temp = x2;
+	int y1_temp = y1;
+	int y2_temp = y2;
+	x1_temp++;
+	y1_temp++;
+
+	if (matriz[x2][y2] == 'P'){//verificar que no coma piezas de su mismo color.
+		pieza_encontrada++;
+	}else if (matriz[x2][y2] == 'T'){
+		pieza_encontrada++;
+	}else if (matriz[x2][y2] == 'A'){
+		pieza_encontrada++;
+	}else if (matriz[x2][y2] == 'D'){
+		pieza_encontrada++;
+	}else if (matriz[x2][y2] == 'C'){
+		pieza_encontrada++;
+	}else if (matriz[x2][y2] == 'R'){
+		pieza_encontrada++;
+	}
+
+	if (y1 == y2){
+		pieza_encontrada++;
+	}
+
+	if (y1 != y2 && x1 != x2){
+		for (x1_temp; x1_temp < x2_temp; x1_temp++){
+			for (y1_temp; y1_temp < y2_temp; y1_temp++){
+				if (matriz[x1_temp][y1_temp] != '.'){
+				pieza_encontrada++;
+				}
+			}
+		}
+		pieza_encontrada--;
+	}	
+
+	if(pieza_encontrada == 0){
+		mover = true;		
+	}else{
+		mover = false;
+	}	
+
+	return mover;
+}
+
+bool mover_caballo(int x1, int y1, int x2, int y2, char** matriz){
+	bool mover = false;
+
+	if ((x2 == x1 + 2) && (y2 == y1 + 1)){
+		mover = true;
+	}else if ((x2 == x1 + 1) && (y2 == y1 +2)){
+		mover = true;
+	}else if ((y2 == y1 + 2) && (x2 == x1 - 1)){
+		mover = true;
+	}else if ((x2 == x1 - 2) && (y2 == y1 + 1)){
+		mover = true;
+	}else if ((x2 == x1 - 2) && (y2 == y1 - 1)){
+		mover = true;
+	}else if ((y2 == y1 - 2) && (x2 == x1 - 1)){
+		mover = true;
+	}else if ((y2 == y1 - 2) && (x2 == x1 + 1)){
+		mover = true;
+	}else if ((x2 == x1 + 2) && (y2 == y1 + 1)){
+		mover = true;
+	}else{
+		mover = false;
+	}
+
+	if (matriz[x2][y2] == 'P'){//verificar que no coma piezas de su mismo color.
+		mover = false;
+	}else if (matriz[x2][y2] == 'T'){
+		mover = false;
+	}else if (matriz[x2][y2] == 'A'){
+		mover = false;
+	}else if (matriz[x2][y2] == 'D'){
+		mover = false;
+	}else if (matriz[x2][y2] == 'C'){
+		mover = false;
+	}else if (matriz[x2][y2] == 'R'){
+		mover = false;
 	}
 
 	return mover;
 }
+
+bool mover_dama(int x1, int y1, int x2, int y2, char** matriz){
+	bool mover = false;
+	int pieza_encontrada = 1;
+	int x1_temp = x1;
+	int x2_temp = x2;
+	int y1_temp = y1;
+	int y2_temp = y2;
+	x1_temp++;
+	y1_temp++;
+
+	if (matriz[x2][y2] == 'P'){//verificar que no coma piezas de su mismo color.
+		pieza_encontrada++;
+	}else if (matriz[x2][y2] == 'T'){
+		pieza_encontrada++;
+	}else if (matriz[x2][y2] == 'A'){
+		pieza_encontrada++;
+	}else if (matriz[x2][y2] == 'D'){
+		pieza_encontrada++;
+	}else if (matriz[x2][y2] == 'C'){
+		pieza_encontrada++;
+	}else if (matriz[x2][y2] == 'R'){
+		pieza_encontrada++;
+	}
+
+	if ((y1 == y2 && x1 != x2) || (y1 != y2 && x1 == x2)){//verificar si mueve en la misma columna o  misma fila
+		for (x1_temp; x1_temp < x2_temp; x1_temp++){
+			if (matriz[x1_temp][y1] != '.'){
+				pieza_encontrada++;
+			}
+		}
+
+		for (y1_temp; y1_temp < y2_temp; y1_temp++){
+			if (matriz[x1][y1_temp] != '.'){
+				pieza_encontrada++;
+			}
+		}
+		pieza_encontrada--;
+	}
+
+	if (y1 != y2 && x1 != x2){
+		for (x1_temp; x1_temp < x2_temp; x1_temp++){
+			for (y1_temp; y1_temp < y2_temp; y1_temp++){
+				if (matriz[x1_temp][y1_temp] != '.'){
+				pieza_encontrada++;
+				}
+			}
+		}
+		pieza_encontrada--;
+	}
+
+		if(pieza_encontrada == 0){
+			mover = true;		
+		}else{
+			mover = false;
+		}	
+
+	return mover;
+}
+
+bool mover_rey(int x1, int y1, int x2, int y2, char** matriz){
+	bool mover = false;
+
+	if ((x2 == x1 + 1) && (y2 == y1)){
+		mover = true;
+	}else if ((x2 == x1 - 1) && (y2 == y1)){
+		mover = true;
+	}else if ((y2 == y1 + 1) && (x2 == x1)){
+		mover = true;
+	}else if ((x2 == x1) && (y2 == y1 + 1)){
+		mover = true;
+	}else if ((x2 == x1 + 1) && (y2 == y1 - 1)){
+		mover = true;
+	}else if ((y2 == y1 + 1) && (x2 == x1 + 1)){
+		mover = true;
+	}else if ((y2 == y1 + 1) && (x2 == x1 - 1)){
+		mover = true;
+	}else if ((x2 == x1 - 1) && (y2 == y1 - 1)){
+		mover = true;
+	}else{
+		mover = false;
+	}
+
+	if (matriz[x2][y2] == 'P'){//verificar que no coma piezas de su mismo color.
+		mover = false;
+	}else if (matriz[x2][y2] == 'T'){
+		mover = false;
+	}else if (matriz[x2][y2] == 'A'){
+		mover = false;
+	}else if (matriz[x2][y2] == 'D'){
+		mover = false;
+	}else if (matriz[x2][y2] == 'C'){
+		mover = false;
+	}else if (matriz[x2][y2] == 'R'){
+		mover = false;
+	}
+
+	return mover;
+}
+
 
 
 
