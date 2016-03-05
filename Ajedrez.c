@@ -103,9 +103,6 @@ void ciclo_juego(){//juego completo
 
 			if (contador_turnos % 2 == 0){//pieza debe ser mayuscula, turno jugador 1
 				//convertir entrada en coordenadas
-				move(0,0);
-				printw("dasdasdasasd");
-				refresh();
 				x1 = movement[1];
 				y1 = movement[0];
 				x2 = movement[3];
@@ -297,7 +294,7 @@ bool entrada_movida(char movement[], int size){// 48 a 57 son numeros = 65 a 72 
 		chars++;
 	}
 
-	if (movement[3] >= 48 && movement[3] <= 56){
+	if (movement[3] >= 48 && movement[3] <= 57){
 		nums++;
 	}
 
@@ -357,27 +354,100 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 					move(16, 10);
   					addstr("Ingrese pieza a cambiar por peon: ");
   					pieza_nueva = getch();
-  					matriz[x2][y2] = pieza_nueva;
+  					matriz[x2][y2] = pieza_nueva;//falta validar pieza
 					matriz[x1][y1] = '.';
 				}
-				/////////////////////JAQUE
-				bool jaque = false;
-				if ((y1 == 0) && (y2 + 1 == 'r')){//cuando peon come y esta en orilla izquierda
-					jaque = true;
-				}else if ((y1 == 7) && ('r' == y2 + 1)){//cuando peon come y esta en orilla derecha
-					jaque = true;
-				}else if ((y1 != 0 || y1 != 7) && (y2 + 1 == 'r')){//cuando peon come y esta en medio.
-					jaque = true;
-				}else{
-					jaque = false;
+				/*JAQUE*/
+				for (int i = 0; i < 8; i++){
+					for (int j = 0; j < 8; j++){
+						if (matriz[i][j] == 'r'){
+							x1 = i;
+							y1 = j;
+						}
+					}
+				}//buscar al rey
+
+				if ((x1 - 1 >= 0) && (y1 + 1 <= 7) && (matriz[x1 - 1][y1 + 1] == 'P')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 - 1 >= 0) && (y1 - 1 >= 0) && (matriz[x1 - 1][y1 - 1] == 'P')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
 				}
+				/*fin jaque*/
 
 			}
 		}else if (pieza == 'T'){
 			if (mover_torre(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'T';
 				matriz[x1][y1] = '.';
-				/////////////////////JAQUE
+				/*JAQUE*/
+				for (int i = 0; i < 8; i++){
+					for (int j = 0; j < 8; j++){
+						if (matriz[i][j] == 'r'){
+							x1 = i;
+							y1 = j;
+						}
+					}
+				}//buscar al rey
+
+				int x1_temp = x1;
+				int x2_temp = x2;
+				int y1_temp = y1;
+				int y2_temp = y2;
+				x1_temp++;
+				y1_temp++;
+				int pieza_encontrada = 0;
+
+				if (y1 == y2 && x1 != x2 && x1 < x2){//verificar si mueve en la misma columna o  misma fila
+					x1_temp++;
+					for (x1_temp; x1_temp < x2_temp; x1_temp++){
+						if (matriz[x1_temp][y1] != '.' && matriz[x1_temp][y1] != 'r'){
+							pieza_encontrada++;
+						}
+					}
+				}
+
+				if ((y1 != y2 && x1 == x2 && y1 < y2)){
+					y1_temp++;
+					for (y1_temp; y1_temp < y2_temp; y1_temp++){
+						if (matriz[x1][y1_temp] != '.' && matriz[x1_temp][y1] != 'r'){
+						pieza_encontrada++;
+						}
+					}
+				}
+
+				if (y1 == y2 && x1 != x2 && x1 > x2){//verificar si mueve en la misma columna o  misma fila
+					x1_temp--;
+					for (x1_temp; x1_temp > x2_temp; x1_temp--){
+						if (matriz[x1_temp][y1] != '.' && matriz[x1_temp][y1] != 'r'){
+							pieza_encontrada++;
+						}
+					}
+				}
+
+				if ((y1 != y2 && x1 == x2 && y1 > y2)){
+					y1_temp--;
+					for (y1_temp; y1_temp > y2_temp; y1_temp--){
+						if (matriz[x1][y1_temp] != '.' && matriz[x1_temp][y1] != 'r'){
+							pieza_encontrada++;
+						}
+					}
+				}
+
+				if (y1 != y2 && x1 != x2){
+					pieza_encontrada++;
+				}
+
+
+		if(pieza_encontrada == 0){
+			move(16, 10);
+			printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+			getch();	
+		}
+				/*fin jaque*/
 			}
 		}else if (pieza == 'A'){
 			if (mover_alfil(x1, y1, x2, y2, matriz, contador_turnos)){
@@ -389,7 +459,50 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 			if (mover_caballo(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'C';
 				matriz[x1][y1] = '.';
-				/////////////////////JAQUE
+				/*JAQUE*/
+				for (int i = 0; i < 8; i++){
+					for (int j = 0; j < 8; j++){
+						if (matriz[i][j] == 'r'){
+							x1 = i;
+							y1 = j;
+						}
+					}
+				}//buscar al rey
+
+				if ((x1 - 2 >= 0) && (y1 + 1 <= 7) && (matriz[x1 - 2][y1 + 1] == 'C')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 - 2 >= 0) && (y1 - 1 <= 7) && (matriz[x1 - 2][y1 - 1] == 'C')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 - 1 >= 0) && (y1 + 2 <= 7) && (matriz[x1 - 1][y1 + 2] == 'C')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 - 1 >= 0) && (y1 - 2 >= 0) && (matriz[x1 - 1][y1 - 2] == 'C')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 + 1 <= 7) && (y1 + 2 <= 7) && (matriz[x1 + 1][y1 + 2] == 'C')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 - 1 >= 0) && (y1 - 2 >= 0) && (matriz[x1 - 1][y1 - 2] == 'C')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 + 2 <= 7) && (y1 + 1 <= 7) && (matriz[x1 + 2][y1 + 1] == 'C')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 + 2 <= 7) && (y1 - 1 >= 0) && (matriz[x1 + 2][y1 - 1] == 'C')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}/*fin jaque*/
+
 			}
 		}else if (pieza == 'D'){
 			if (mover_dama(x1, y1, x2, y2, matriz, contador_turnos)){
@@ -515,13 +628,52 @@ bool mover_peon(int x1, int y1, int x2, int y2, char** matriz, int contador_turn
 
 bool mover_torre(int x1, int y1, int x2, int y2, char** matriz, int contador_turnos){
 	bool mover = false;
-	int pieza_encontrada = 1;
+	int pieza_encontrada = 0;
 	int x1_temp = x1;
 	int x2_temp = x2;
 	int y1_temp = y1;
 	int y2_temp = y2;
-	x1_temp++;
-	y1_temp++;
+		
+
+	if (y1 == y2 && x1 != x2 && x1 < x2){//verificar si mueve en la misma columna o  misma fila
+		x1_temp++;
+		for (x1_temp; x1_temp < x2_temp; x1_temp++){
+			if (matriz[x1_temp][y1] != '.'){
+				pieza_encontrada++;
+			}
+		}
+	}
+
+	if ((y1 != y2 && x1 == x2 && y1 < y2)){
+		y1_temp++;
+		for (y1_temp; y1_temp < y2_temp; y1_temp++){
+			if (matriz[x1][y1_temp] != '.'){
+				pieza_encontrada++;
+			}
+		}
+	}
+
+	if (y1 == y2 && x1 != x2 && x1 > x2){//verificar si mueve en la misma columna o  misma fila
+		x1_temp--;
+		for (x1_temp; x1_temp > x2_temp; x1_temp--){
+			if (matriz[x1_temp][y1] != '.'){
+				pieza_encontrada++;
+			}
+		}
+	}
+
+	if ((y1 != y2 && x1 == x2 && y1 > y2)){
+		y1_temp--;
+		for (y1_temp; y1_temp > y2_temp; y1_temp--){
+			if (matriz[x1][y1_temp] != '.'){
+				pieza_encontrada++;
+			}
+		}
+	}
+
+	if (x1 != x2 && y1 != y2){
+		pieza_encontrada++;
+	}
 
 	if (contador_turnos % 2 == 0){
 		if (matriz[x2][y2] == 'P'){//verificar que no coma piezas de su mismo color.
@@ -551,24 +703,6 @@ bool mover_torre(int x1, int y1, int x2, int y2, char** matriz, int contador_tur
 		}else if (matriz[x2][y2] == 'r'){
 			pieza_encontrada++;
 		}
-	}
-
-		
-
-	if ((y1 == y2 && x1 != x2) || (y1 != y2 && x1 == x2)){//verificar si mueve en la misma columna o  misma fila
-		for (x1_temp; x1_temp < x2_temp; x1_temp++){
-			if (matriz[x1_temp][y1] != '.'){
-				pieza_encontrada++;
-			}
-		}
-
-		for (y1_temp; y1_temp < y2_temp; y1_temp++){
-			if (matriz[x1][y1_temp] != '.'){
-				pieza_encontrada++;
-			}
-		}
-
-		pieza_encontrada--;
 	}
 
 		if(pieza_encontrada == 0){
@@ -588,7 +722,22 @@ bool mover_alfil(int x1, int y1, int x2, int y2, char** matriz, int contador_tur
 	int y2_temp = y2;
 	x1_temp++;
 	y1_temp++;
+	
 
+	if (y1 == y2){
+		pieza_encontrada++;
+	}
+
+	if (y1 != y2 && x1 != x2){
+		for (x1_temp; x1_temp < x2_temp; x1_temp++){
+			for (y1_temp; y1_temp < y2_temp; y1_temp++){
+				if (matriz[x1_temp][y1_temp] != '.'){
+				pieza_encontrada++;
+				}
+			}
+		}
+		pieza_encontrada--;
+	}
 
 	if (contador_turnos % 2 == 0){
 		if (matriz[x2][y2] == 'P'){//verificar que no coma piezas de su mismo color.
@@ -620,21 +769,6 @@ bool mover_alfil(int x1, int y1, int x2, int y2, char** matriz, int contador_tur
 		}
 	}	
 
-	if (y1 == y2){
-		pieza_encontrada++;
-	}
-
-	if (y1 != y2 && x1 != x2){
-		for (x1_temp; x1_temp < x2_temp; x1_temp++){
-			for (y1_temp; y1_temp < y2_temp; y1_temp++){
-				if (matriz[x1_temp][y1_temp] != '.'){
-				pieza_encontrada++;
-				}
-			}
-		}
-		pieza_encontrada--;
-	}	
-
 	if(pieza_encontrada == 0){
 		mover = true;		
 	}else{
@@ -649,7 +783,7 @@ bool mover_caballo(int x1, int y1, int x2, int y2, char** matriz, int contador_t
 
 	if ((x2 == x1 + 2) && (y2 == y1 + 1)){
 		mover = true;
-	}else if ((x2 == x1 + 1) && (y2 == y1 +2)){
+	}else if ((x2 == x1 + 1) && (y2 == y1 + 2)){
 		mover = true;
 	}else if ((y2 == y1 + 2) && (x2 == x1 - 1)){
 		mover = true;
@@ -661,7 +795,7 @@ bool mover_caballo(int x1, int y1, int x2, int y2, char** matriz, int contador_t
 		mover = true;
 	}else if ((y2 == y1 - 2) && (x2 == x1 + 1)){
 		mover = true;
-	}else if ((x2 == x1 + 2) && (y2 == y1 + 1)){
+	}else if ((x2 == x1 + 2) && (y2 == y1 - 1)){
 		mover = true;
 	}else{
 		mover = false;
@@ -710,6 +844,34 @@ bool mover_dama(int x1, int y1, int x2, int y2, char** matriz, int contador_turn
 	x1_temp++;
 	y1_temp++;
 
+	
+
+	if ((y1 == y2 && x1 != x2) || (y1 != y2 && x1 == x2)){//verificar si mueve en la misma columna o  misma fila
+		for (x1_temp; x1_temp < x2_temp; x1_temp++){
+			if (matriz[x1_temp][y1] != '.'){
+				pieza_encontrada++;
+			}
+		}
+
+		for (y1_temp; y1_temp < y2_temp; y1_temp++){
+			if (matriz[x1][y1_temp] != '.'){
+				pieza_encontrada++;
+			}
+		}
+		pieza_encontrada--;
+	}
+
+	if (y1 != y2 && x1 != x2){
+		for (x1_temp; x1_temp < x2_temp; x1_temp++){
+			for (y1_temp; y1_temp < y2_temp; y1_temp++){
+				if (matriz[x1_temp][y1_temp] != '.'){
+				pieza_encontrada++;
+				}
+			}
+		}
+		pieza_encontrada--;
+	}
+
 	if (contador_turnos % 2 == 0){
 		if (matriz[x2][y2] == 'P'){//verificar que no coma piezas de su mismo color.
 			pieza_encontrada++;
@@ -740,32 +902,6 @@ bool mover_dama(int x1, int y1, int x2, int y2, char** matriz, int contador_turn
 		}
 	}
 
-	if ((y1 == y2 && x1 != x2) || (y1 != y2 && x1 == x2)){//verificar si mueve en la misma columna o  misma fila
-		for (x1_temp; x1_temp < x2_temp; x1_temp++){
-			if (matriz[x1_temp][y1] != '.'){
-				pieza_encontrada++;
-			}
-		}
-
-		for (y1_temp; y1_temp < y2_temp; y1_temp++){
-			if (matriz[x1][y1_temp] != '.'){
-				pieza_encontrada++;
-			}
-		}
-		pieza_encontrada--;
-	}
-
-	if (y1 != y2 && x1 != x2){
-		for (x1_temp; x1_temp < x2_temp; x1_temp++){
-			for (y1_temp; y1_temp < y2_temp; y1_temp++){
-				if (matriz[x1_temp][y1_temp] != '.'){
-				pieza_encontrada++;
-				}
-			}
-		}
-		pieza_encontrada--;
-	}
-
 		if(pieza_encontrada == 0){
 			mover = true;		
 		}else{
@@ -784,7 +920,7 @@ bool mover_rey(int x1, int y1, int x2, int y2, char** matriz, int contador_turno
 		mover = true;
 	}else if ((y2 == y1 + 1) && (x2 == x1)){
 		mover = true;
-	}else if ((x2 == x1) && (y2 == y1 + 1)){
+	}else if ((x2 == x1) && (y2 == y1 - 1)){
 		mover = true;
 	}else if ((x2 == x1 + 1) && (y2 == y1 - 1)){
 		mover = true;
@@ -834,7 +970,7 @@ bool mover_rey(int x1, int y1, int x2, int y2, char** matriz, int contador_turno
 
 
 
-//gcc -o aje Ajedrez.c -lncurses
+//gcc -o aje Ajedrez.c -lncurses 5-5-7-4
 
 /*	   A  B  C  D  E  F  G  H
 	8 [T][C][A][D][R][A][C][T] 8
