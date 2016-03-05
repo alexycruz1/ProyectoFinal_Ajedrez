@@ -286,7 +286,7 @@ bool entrada_movida(char movement[], int size){// 48 a 57 son numeros = 65 a 72 
 	char temp;
 	bool movim_correcto = false;
 
-	if (movement[1] >= 48 && movement[1] <= 57){
+	if (movement[1] >= 48 && movement[1] <= 56){
 		nums++;
 	}
 
@@ -294,7 +294,7 @@ bool entrada_movida(char movement[], int size){// 48 a 57 son numeros = 65 a 72 
 		chars++;
 	}
 
-	if (movement[3] >= 48 && movement[3] <= 57){
+	if (movement[3] >= 48 && movement[3] <= 56){
 		nums++;
 	}
 
@@ -453,7 +453,33 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 			if (mover_alfil(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'A';
 				matriz[x1][y1] = '.';
-				/////////////////////JAQUE
+				/*JAQUE*/
+
+				for (int i = 0; i < 8; i++){
+					for (int j = 0; j < 8; j++){
+						if (matriz[i][j] == 'r'){
+							x1 = i;
+							y1 = j;
+						}
+					}
+				}//buscar al rey
+				int pieza_encontrada = 0;
+
+				if (y1 == y2 || x1 == x2){
+					pieza_encontrada++;
+				}
+
+				if ((x1 + y2 != x2 + y1) && (x1 != y2 && x2 != y1)){
+					pieza_encontrada++;
+				}
+
+				if(pieza_encontrada == 0){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();		
+				}
+
+				/*fin jaque*/
 			}
 		}else if (pieza == 'C'){
 			if (mover_caballo(x1, y1, x2, y2, matriz, contador_turnos)){
@@ -714,21 +740,17 @@ bool mover_torre(int x1, int y1, int x2, int y2, char** matriz, int contador_tur
 }
 
 bool mover_alfil(int x1, int y1, int x2, int y2, char** matriz, int contador_turnos){
-	bool mover = false;
-	int pieza_encontrada = 1;
+	bool mover;
+	int pieza_encontrada = 0;
 	int x1_temp = x1;
 	int x2_temp = x2;
 	int y1_temp = y1;
 	int y2_temp = y2;
-	x1_temp++;
-	y1_temp++;
 	
 
-	if (y1 == y2){
-		pieza_encontrada++;
-	}
-
-	if (y1 != y2 && x1 != x2){
+	if (x2 > x1 && y2 > y1){
+		x1_temp++;
+		y1_temp++;
 		for (x1_temp; x1_temp < x2_temp; x1_temp++){
 			for (y1_temp; y1_temp < y2_temp; y1_temp++){
 				if (matriz[x1_temp][y1_temp] != '.'){
@@ -736,8 +758,48 @@ bool mover_alfil(int x1, int y1, int x2, int y2, char** matriz, int contador_tur
 				}
 			}
 		}
-		pieza_encontrada--;
 	}
+
+	if (x2 > x1 && y2 < y1){
+		x1_temp++;
+		y1_temp--;
+		for (x1_temp; x1_temp < x2_temp; x1_temp++){
+			for (y1_temp; y1_temp > y2_temp; y1_temp--){
+				if (matriz[x1_temp][y1_temp] != '.'){
+				pieza_encontrada++;
+				}
+			}
+		}
+	}
+
+	if (x2 < x1 && y2 > y1){
+		x1_temp--;
+		y1_temp++;
+		for (x1_temp; x1_temp > x2_temp; x1_temp--){
+			for (y1_temp; y1_temp < y2_temp; y1_temp++){
+				if (matriz[x1_temp][y1_temp] != '.'){
+				pieza_encontrada++;
+				}
+			}
+		}
+	}
+
+	if (x2 < x1 && y2 < y1){
+		x1_temp--;
+		y1_temp--;
+		for (x1_temp; x1_temp > x2_temp; x1_temp--){
+			for (y1_temp; y1_temp > y2_temp; y1_temp--){
+				if (matriz[x1_temp][y1_temp] != '.'){
+				pieza_encontrada++;
+				}
+			}
+		}
+	}
+
+	if (y1 == y2 || x1 == x2){
+		pieza_encontrada++;
+	}
+	
 
 	if (contador_turnos % 2 == 0){
 		if (matriz[x2][y2] == 'P'){//verificar que no coma piezas de su mismo color.
