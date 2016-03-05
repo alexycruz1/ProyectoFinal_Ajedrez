@@ -30,7 +30,6 @@ void ciclo_juego(){//juego completo
 	int size = 8;
 	int size_movement = 5;
 	char movement[size_movement];
-	char pasar;
 	int ganador = 1;
 
 	char **matriz;
@@ -92,6 +91,9 @@ void ciclo_juego(){//juego completo
   			pos_coordenada1++;
   		}
 
+  		move(5, 50);
+  		printw("Jugador #1 usa mayusculas");
+
   		move(15, 10);
   		addstr("Ingrese el movimiento: ");
   		getnstr(movement, sizeof(movement) - 1);
@@ -101,6 +103,9 @@ void ciclo_juego(){//juego completo
 
 			if (contador_turnos % 2 == 0){//pieza debe ser mayuscula, turno jugador 1
 				//convertir entrada en coordenadas
+				move(0,0);
+				printw("dasdasdasasd");
+				refresh();
 				x1 = movement[1];
 				y1 = movement[0];
 				x2 = movement[3];
@@ -130,8 +135,11 @@ void ciclo_juego(){//juego completo
 					mover(x1, y1, x2, y2, pieza, matriz, contador_turnos);
 				}
 			}	
-		}else{
+		}else if(!entrada_movida(movement, size_movement)){
   			contador_turnos++;
+  			move(15, 10);
+  			printw("MOVIMIENTO O FORMATO INVALIDO, INGRESA UNO NUEVO");
+  			getch();
   		}
   		refresh();
 
@@ -177,6 +185,9 @@ void ciclo_juego(){//juego completo
   			pos_coordenada1++;
   		}
 
+  		move(5, 50);
+  		printw("Jugador #2 usa minusculas");
+
   		move(15, 10);
   		addstr("Ingrese el movimiento: ");
   		getnstr(movement, sizeof(movement) - 1);
@@ -214,10 +225,12 @@ void ciclo_juego(){//juego completo
 					mover(x1, y1, x2, y2, pieza, matriz, contador_turnos);
 				}
 			}
-  		}else{
+  		}else if(!entrada_movida(movement, size_movement)){
   			contador_turnos++;
+  			move(15, 10);
+  			printw("MOVIMIENTO O FORMATO INVALIDO, INGRESA UNO NUEVO");
+  			getch();
   		}
-
   		refresh();
   		
   		contador_turnos++;
@@ -301,7 +314,7 @@ bool entrada_movida(char movement[], int size){// 48 a 57 son numeros = 65 a 72 
 	return movim_correcto;
 }
 
-bool verificar_pieza_mayus(int x1, int y1, char** matriz){//revisar posicion, esta malo
+bool verificar_pieza_mayus(int x1, int y1, char** matriz){//revisar posicion
 	int revisar = matriz[x1][y1];
 	bool pieza_correcta;
 	if (revisar >= 65 && revisar <= 90){
@@ -313,7 +326,7 @@ bool verificar_pieza_mayus(int x1, int y1, char** matriz){//revisar posicion, es
 	return pieza_correcta;
 }
 
-bool verificar_pieza_minus(int x1, int y1, char** matriz){//revisar posicion, esta malo
+bool verificar_pieza_minus(int x1, int y1, char** matriz){//revisar posicion
 	int revisar = matriz[x1][y1];
 	bool pieza_correcta;
 	if (revisar >= 97 && revisar <= 121){
@@ -338,31 +351,57 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 			if (mover_peon(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'P';
 				matriz[x1][y1] = '.';
+				/*cuando peon llega al otro lado*/
+				if (x2 == 7){
+					char pieza_nueva;
+					move(16, 10);
+  					addstr("Ingrese pieza a cambiar por peon: ");
+  					pieza_nueva = getch();
+  					matriz[x2][y2] = pieza_nueva;
+					matriz[x1][y1] = '.';
+				}
+				/////////////////////JAQUE
+				bool jaque = false;
+				if ((y1 == 0) && (y2 + 1 == 'r')){//cuando peon come y esta en orilla izquierda
+					jaque = true;
+				}else if ((y1 == 7) && ('r' == y2 + 1)){//cuando peon come y esta en orilla derecha
+					jaque = true;
+				}else if ((y1 != 0 || y1 != 7) && (y2 + 1 == 'r')){//cuando peon come y esta en medio.
+					jaque = true;
+				}else{
+					jaque = false;
+				}
+
 			}
 		}else if (pieza == 'T'){
 			if (mover_torre(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'T';
 				matriz[x1][y1] = '.';
+				/////////////////////JAQUE
 			}
 		}else if (pieza == 'A'){
 			if (mover_alfil(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'A';
 				matriz[x1][y1] = '.';
+				/////////////////////JAQUE
 			}
 		}else if (pieza == 'C'){
 			if (mover_caballo(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'C';
 				matriz[x1][y1] = '.';
+				/////////////////////JAQUE
 			}
 		}else if (pieza == 'D'){
 			if (mover_dama(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'D';
 				matriz[x1][y1] = '.';
+				/////////////////////JAQUE
 			}
 		}else if (pieza == 'R'){
 			if (mover_rey(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'R';
 				matriz[x1][y1] = '.';
+				/////////////////////JAQUE
 			}
 		}
 	}else{
@@ -370,31 +409,37 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 			if (mover_peon(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'p';
 				matriz[x1][y1] = '.';
+				/////////////////////JAQUE
 			}
 		}else if (pieza == 't'){
 			if (mover_torre(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 't';
 				matriz[x1][y1] = '.';
+				/////////////////////JAQUE
 			}
 		}else if (pieza == 'a'){
 			if (mover_alfil(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'A';
 				matriz[x1][y1] = '.';
+				/////////////////////JAQUE
 			}
 		}else if (pieza == 'c'){
 			if (mover_caballo(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'c';
 				matriz[x1][y1] = '.';
+				/////////////////////JAQUE
 			}
 		}else if (pieza == 'd'){
 			if (mover_dama(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'd';
 				matriz[x1][y1] = '.';
+				/////////////////////JAQUE
 			}
 		}else if (pieza == 'r'){
 			if (mover_rey(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'r';
 				matriz[x1][y1] = '.';
+				/////////////////////JAQUE
 			}
 		}
 	}
