@@ -1,9 +1,16 @@
 #include <ncurses.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
+#include <fstream>
+#include <sstream>
+
+using std::stringstream;
+using std::ifstream;
+using std::ofstream;
+using std::string;
 
 void llenar_tablero(char**);
-void ciclo_juego();
 bool entrada_movida(char[], int);
 bool verificar_pieza_mayus(int, int, char**);
 bool verificar_pieza_minus(int, int, char**);
@@ -16,17 +23,11 @@ bool mover_caballo(int, int, int, int, char**, int);
 bool mover_dama(int, int, int, int, char**, int);
 bool mover_rey(int, int, int, int, char**, int);
 void jaque_mate(int, int, char**, int);
+void guardar_partida(char**);
+void cargar_partida(char**);
 
 
 int main(int argc, char*argv[]){
-	ciclo_juego();
-
-  	endwin();
-	return 0;
-}//fin del main
-
-
-void ciclo_juego(){//juego completo
 	int contador_turnos = 2;
 	int size = 8;
 	int size_movement = 5;
@@ -94,6 +95,10 @@ void ciclo_juego(){//juego completo
 
   		move(5, 50);
   		printw("Jugador #1 usa mayusculas");
+  		move(6, 50);
+  		printw("INGRESA [Z] PARA GUARDAR");
+  		move(7, 50);
+  		printw("INGRESA [X] PARA CARGAR");
 
   		move(15, 10);
   		addstr("Ingrese el movimiento: ");
@@ -102,7 +107,15 @@ void ciclo_juego(){//juego completo
   		if (entrada_movida(movement, size_movement)){//lo de abajo depende de esto
   			int x1, y1, x2, y2;
 
-			if (contador_turnos % 2 == 0){//pieza debe ser mayuscula, turno jugador 1
+  			if (movement[0] == 90){//guardar
+  				guardar_partida(matriz);
+  			}
+
+  			if (movement[0] == 88){
+  				cargar_partida(matriz);
+  			}
+
+			if (contador_turnos % 2 == 0 && movement[0] != 90 && movement[0] != 88){//pieza debe ser mayuscula, turno jugador 1
 				//convertir entrada en coordenadas
 				x1 = movement[1];
 				y1 = movement[0];
@@ -185,6 +198,10 @@ void ciclo_juego(){//juego completo
 
   		move(5, 50);
   		printw("Jugador #2 usa minusculas");
+  		move(6, 50);
+  		printw("INGRESA [Z] PARA GUARDAR");
+  		move(7, 50);
+  		printw("INGRESA [X] PARA CARGAR");
 
   		move(15, 10);
   		addstr("Ingrese el movimiento: ");
@@ -192,7 +209,16 @@ void ciclo_juego(){//juego completo
   		
   		if (entrada_movida(movement, size_movement)){
   			int x1, y1, x2, y2;
-  			if (contador_turnos % 2 != 0){//pieza debe ser mayuscula, turno jugador 1
+
+  			if (movement[0] == 90){//guardar
+  				guardar_partida(matriz);
+  			}
+
+  			if (movement[0] == 88){
+  				cargar_partida(matriz);
+  			}
+
+  			if (contador_turnos % 2 != 0 && movement[0] != 90 && movement[0] != 88){//pieza debe ser mayuscula, turno jugador 1
 				//convertir entrada en coordenadas
 				x1 = movement[1];
 				y1 = movement[0];
@@ -234,8 +260,10 @@ void ciclo_juego(){//juego completo
   		contador_turnos++;
 		}
 	}
-}
 
+  	endwin();
+	return 0;
+}//fin del main
 
 void llenar_tablero(char** matriz){
 	int size = 8;
@@ -303,6 +331,11 @@ bool entrada_movida(char movement[], int size){// 48 a 57 son numeros = 65 a 72 
 		chars++;	
 	}
 
+	if (movement[0] == 90 || movement[0] == 88){
+		chars = 2;
+		nums = 2;
+	}
+
 	if (nums == 2 && chars == 2){
 		movim_correcto = true;
 	}else{
@@ -356,7 +389,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
   					addstr("Ingrese pieza a cambiar por peon: ");
   					pieza_nueva = getch();
   					int revisar_char = pieza_nueva;
-  					if ((revisar_char == 65) || (revisar_char == 67) || (revisar_char == 80) || (revisar_char == 84) || (revisar_char == 68)){
+  					if ((revisar_char == 65) || (revisar_char == 67) || (revisar_char == 84) || (revisar_char == 68)){
   						matriz[x2][y2] = pieza_nueva;
 						matriz[x1][y1] = '.';
   					}
@@ -850,7 +883,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
   					addstr("Ingrese pieza a cambiar por peon: ");
   					pieza_nueva = getch();
   					int revisar_char = pieza_nueva;
-  					if ((revisar_char == 97) || (revisar_char == 99) || (revisar_char == 112) || (revisar_char == 116) || (revisar_char == 100)){
+  					if ((revisar_char == 97) || (revisar_char == 99) || (revisar_char == 116) || (revisar_char == 100)){
   						matriz[x2][y2] = pieza_nueva;
 						matriz[x1][y1] = '.';
   					}
@@ -5917,10 +5950,40 @@ void jaque_mate(int x, int y, char** matriz, int contador_turnos){
 		
 }
 
+void guardar_partida(char** matriz){
+	string guardar = "";
+	for (int i = 0; i < 8; i++){
+		for (int j = 0; j < 8; j++){
+			guardar += matriz[i][j];
+		}
+	}
+
+	ofstream juego("partida.txt");
+	juego << guardar;
+	juego.close();
+}
+
+void cargar_partida(char** matriz){
+	char* temp = new char[65];
+	ifstream juego("partida.txt");
+	for (int i = 0; i < 64; i++){
+		temp[i] = juego.get();
+	}
+	juego.close();
+
+	int contador = 0;
+	for (int i = 0; i < 8; i++){
+		for (int j = 0; j < 8; j++){
+			matriz[i][j] = temp[contador];
+			contador++;
+		}
+	}
+}
 
 
 
-//gcc -o aje Ajedrez.c -lncurses
+
+//g++ -o aje Ajedrez.cpp -lncurses
 
 /*	   A  B  C  D  E  F  G  H
 	8 [T][C][A][D][R][A][C][T] 8
