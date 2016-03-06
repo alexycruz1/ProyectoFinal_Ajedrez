@@ -367,14 +367,19 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 					}
 				}//buscar al rey
 
-				if ((x1 - 1 >= 0) && (y1 + 1 <= 7) && (matriz[x1 - 1][y1 + 1] == 'P')){
-					move(16, 10);
-					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
-					getch();
-				}else if ((x1 - 1 >= 0) && (y1 - 1 >= 0) && (matriz[x1 - 1][y1 - 1] == 'P')){
-					move(16, 10);
-					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
-					getch();
+				if ((x1 - 1 >= 0) && (y1 + 1 <= 7)){
+					if (matriz[x1 - 1][y1 + 1] == 'P'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+					
+				}else if ((x1 - 1 >= 0) && (y1 - 1 >= 0)){
+					if (matriz[x1 - 1][y1 - 1] == 'P'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
 				}
 				/*fin jaque*/
 
@@ -463,15 +468,79 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						}
 					}
 				}//buscar al rey
+
 				int pieza_encontrada = 0;
+				int x1_temp = x1;
+				int x2_temp = x2;
+				int y1_temp = y1;
+				int y2_temp = y2;
+	
+					x1_temp++;
+					y1_temp++;
+					for (x1_temp; x1_temp < x2_temp; x1_temp++){
+						for (y1_temp; y1_temp < y2_temp; y1_temp++){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'A'){
+								pieza_encontrada++;
+							}
+						}
+					}
 
-				if (y1 == y2 || x1 == x2){
-					pieza_encontrada++;
-				}
+				x1_temp = x1;
+				x2_temp = x2;
+				y1_temp = y1;
+				y2_temp = y2;
+				
 
-				if ((x1 + y2 != x2 + y1) && (x1 != y2 && x2 != y1)){
-					pieza_encontrada++;
-				}
+					x1_temp++;
+					y1_temp--;
+					for (x1_temp; x1_temp < x2_temp; x1_temp++){
+						for (y1_temp; y1_temp > y2_temp; y1_temp--){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'A'){
+								pieza_encontrada++;
+							}
+						}
+					}
+				
+				x1_temp = x1;
+				x2_temp = x2;
+				y1_temp = y1;
+				y2_temp = y2;
+
+				
+					x1_temp--;
+					y1_temp++;
+					for (x1_temp; x1_temp > x2_temp; x1_temp--){
+						for (y1_temp; y1_temp < y2_temp; y1_temp++){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'A'){
+								pieza_encontrada++;
+							}
+						}
+					}
+				
+
+				x1_temp = x1;
+				x2_temp = x2;
+				y1_temp = y1;
+				y2_temp = y2;
+				
+					x1_temp--;
+					y1_temp--;
+					for (x1_temp; x1_temp > x2_temp; x1_temp--){
+						for (y1_temp; y1_temp > y2_temp; y1_temp--){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'A'){
+								pieza_encontrada++;
+							}
+						}
+					}
+
+					if ((y2 == y1 + 1) && (x2 < x1 - 1)){
+						pieza_encontrada++;
+					}
+
+					if ((y2 == y1 - 1) && (x2 < x1 - 1)){
+						pieza_encontrada++;
+					}
+				
 
 				if(pieza_encontrada == 0){
 					move(16, 10);
@@ -535,50 +604,657 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 				matriz[x2][y2] = 'D';
 				matriz[x1][y1] = '.';
 				/////////////////////JAQUE
+				/*JAQUE*/
+				for (int i = 0; i < 8; i++){
+					for (int j = 0; j < 8; j++){
+						if (matriz[i][j] == 'r'){
+							x1 = i;
+							y1 = j;
+						}
+					}
+				}//buscar al rey
+
+				int x1_temp = x1;
+				int x2_temp = x2;
+				int y1_temp = y1;
+				int y2_temp = y2;
+				x1_temp++;
+				y1_temp++;
+				int pieza_encontrada = 0;
+
+				if (y1 == y2 && x1 != x2 && x1 < x2){//verificar si mueve en la misma columna o  misma fila
+					x1_temp++;
+					for (x1_temp; x1_temp < x2_temp; x1_temp++){
+						if (matriz[x1_temp][y1] != '.' && matriz[x1_temp][y1] != 'r'){
+							pieza_encontrada++;
+						}
+					}
+				}
+
+				if ((y1 != y2 && x1 == x2 && y1 < y2)){
+					y1_temp++;
+					for (y1_temp; y1_temp < y2_temp; y1_temp++){
+						if (matriz[x1][y1_temp] != '.' && matriz[x1_temp][y1] != 'r'){
+						pieza_encontrada++;
+						}
+					}
+				}
+
+				if (y1 == y2 && x1 != x2 && x1 > x2){//verificar si mueve en la misma columna o  misma fila
+					x1_temp--;
+					for (x1_temp; x1_temp > x2_temp; x1_temp--){
+						if (matriz[x1_temp][y1] != '.' && matriz[x1_temp][y1] != 'r'){
+							pieza_encontrada++;
+						}
+					}
+				}
+
+				if ((y1 != y2 && x1 == x2 && y1 > y2)){
+					y1_temp--;
+					for (y1_temp; y1_temp > y2_temp; y1_temp--){
+						if (matriz[x1][y1_temp] != '.' && matriz[x1_temp][y1] != 'r'){
+							pieza_encontrada++;
+						}
+					}
+				}
+
+				if (y1 != y2 && x1 != x2){
+					pieza_encontrada++;
+				}
+
+				x1_temp++;
+					y1_temp++;
+					for (x1_temp; x1_temp < x2_temp; x1_temp++){
+						for (y1_temp; y1_temp < y2_temp; y1_temp++){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'r'){
+								pieza_encontrada++;
+							}
+						}
+					}
+
+				x1_temp = x1;
+				x2_temp = x2;
+				y1_temp = y1;
+				y2_temp = y2;
+				
+
+					x1_temp++;
+					y1_temp--;
+					for (x1_temp; x1_temp < x2_temp; x1_temp++){
+						for (y1_temp; y1_temp > y2_temp; y1_temp--){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'r'){
+								pieza_encontrada++;
+							}
+						}
+					}
+				
+				x1_temp = x1;
+				x2_temp = x2;
+				y1_temp = y1;
+				y2_temp = y2;
+
+				
+					x1_temp--;
+					y1_temp++;
+					for (x1_temp; x1_temp > x2_temp; x1_temp--){
+						for (y1_temp; y1_temp < y2_temp; y1_temp++){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'r'){
+								pieza_encontrada++;
+							}
+						}
+					}
+				
+
+				x1_temp = x1;
+				x2_temp = x2;
+				y1_temp = y1;
+				y2_temp = y2;
+				
+					x1_temp--;
+					y1_temp--;
+					for (x1_temp; x1_temp > x2_temp; x1_temp--){
+						for (y1_temp; y1_temp > y2_temp; y1_temp--){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'r'){
+								pieza_encontrada++;
+							}
+						}
+					}
+
+					if ((y2 == y1 + 1) && (x2 < x1 - 1)){
+						pieza_encontrada++;
+					}
+
+					if ((y2 == y1 - 1) && (x2 < x1 - 1)){
+						pieza_encontrada++;
+					}
+				
+
+				if(pieza_encontrada == 0){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();		
+				}
+
+				/*FIN JAQUE REINA*/
 			}
 		}else if (pieza == 'R'){
 			if (mover_rey(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'R';
 				matriz[x1][y1] = '.';
 				/////////////////////JAQUE
+
+				for (int i = 0; i < 8; i++){
+					for (int j = 0; j < 8; j++){
+						if (matriz[i][j] == 'r'){
+							x1 = i;
+							y1 = j;
+						}
+					}
+				}//buscar al rey
+
+				if ((x1 + 1 < 8) && (y2 == y1)){
+					if (matriz[x1 + 1][y1] == 'R'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}else if ((x1 - 1 >= 0) && (y2 == y1)){
+					
+					if (matriz[x1 - 1][y1] == 'R'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}				
+				}else if ((y1 + 1 < 8) && (x2 == x1)){
+					if (matriz[x1][y1 + 1] == 'R'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}else if ((x2 == x1) && (y1 - 1 >= 0)){
+					if ((matriz[x1][y1 - 1] == 'R')){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}else if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+					if (matriz[x1 + 1][y1 - 1] == 'R'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}else if ((y1 + 1 < 8) && (x1 + 1 < 8)){
+					if (matriz[x1 + 1][y1 + 1] == 'R'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}else if ((y1 + 1 < 8) && (x1 - 1 >= 0)){
+					if (matriz[x1 - 1][y1 + 1] == 'R'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}else if ((x1 - 1 >= 0) && (y1 - 1 >= 0)){
+					if (matriz[x1 - 1][y1 - 1] == 'R'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}
 			}
 		}
-	}else{
+	}else{//inicio del jugador numero 2-------------------------------------------------------------------------------------------------------
 		if (pieza == 'p'){
 			if (mover_peon(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'p';
 				matriz[x1][y1] = '.';
 				/////////////////////JAQUE
+
+				/*JAQUE*/
+				for (int i = 0; i < 8; i++){
+					for (int j = 0; j < 8; j++){
+						if (matriz[i][j] == 'R'){
+							x1 = i;
+							y1 = j;
+						}
+					}
+				}//buscar al rey
+
+				if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+					if (matriz[x1 + 1][y1 - 1] == 'p'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+					
+				}else if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+					if (matriz[x1 + 1][y1 + 1] == 'p'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}
+				/*fin jaque*/
+
 			}
 		}else if (pieza == 't'){
 			if (mover_torre(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 't';
 				matriz[x1][y1] = '.';
-				/////////////////////JAQUE
+				/*JAQUE*/
+				for (int i = 0; i < 8; i++){
+					for (int j = 0; j < 8; j++){
+						if (matriz[i][j] == 'R'){
+							x1 = i;
+							y1 = j;
+						}
+					}
+				}//buscar al rey
+
+				int x1_temp = x1;
+				int x2_temp = x2;
+				int y1_temp = y1;
+				int y2_temp = y2;
+				x1_temp++;
+				y1_temp++;
+				int pieza_encontrada = 0;
+
+				if (y1 == y2 && x1 != x2 && x1 < x2){//verificar si mueve en la misma columna o  misma fila
+					x1_temp++;
+					for (x1_temp; x1_temp < x2_temp; x1_temp++){
+						if (matriz[x1_temp][y1] != '.' && matriz[x1_temp][y1] != 'R'){
+							pieza_encontrada++;
+						}
+					}
+				}
+
+				if ((y1 != y2 && x1 == x2 && y1 < y2)){
+					y1_temp++;
+					for (y1_temp; y1_temp < y2_temp; y1_temp++){
+						if (matriz[x1][y1_temp] != '.' && matriz[x1_temp][y1] != 'R'){
+						pieza_encontrada++;
+						}
+					}
+				}
+
+				if (y1 == y2 && x1 != x2 && x1 > x2){//verificar si mueve en la misma columna o  misma fila
+					x1_temp--;
+					for (x1_temp; x1_temp > x2_temp; x1_temp--){
+						if (matriz[x1_temp][y1] != '.' && matriz[x1_temp][y1] != 'R'){
+							pieza_encontrada++;
+						}
+					}
+				}
+
+				if ((y1 != y2 && x1 == x2 && y1 > y2)){
+					y1_temp--;
+					for (y1_temp; y1_temp > y2_temp; y1_temp--){
+						if (matriz[x1][y1_temp] != '.' && matriz[x1_temp][y1] != 'R'){
+							pieza_encontrada++;
+						}
+					}
+				}
+
+				if (y1 != y2 && x1 != x2){
+					pieza_encontrada++;
+				}
+
+
+		if(pieza_encontrada == 0){
+			move(16, 10);
+			printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+			getch();	
+		}
+		/*fin jaque*/
 			}
 		}else if (pieza == 'a'){
 			if (mover_alfil(x1, y1, x2, y2, matriz, contador_turnos)){
-				matriz[x2][y2] = 'A';
+				matriz[x2][y2] = 'a';
 				matriz[x1][y1] = '.';
-				/////////////////////JAQUE
+				/*JAQUE*/
+
+				for (int i = 0; i < 8; i++){
+					for (int j = 0; j < 8; j++){
+						if (matriz[i][j] == 'R'){
+							x1 = i;
+							y1 = j;
+						}
+					}
+				}//buscar al rey
+
+				int pieza_encontrada = 0;
+				int x1_temp = x1;
+				int x2_temp = x2;
+				int y1_temp = y1;
+				int y2_temp = y2;
+	
+					x1_temp++;
+					y1_temp++;
+					for (x1_temp; x1_temp < x2_temp; x1_temp++){
+						for (y1_temp; y1_temp < y2_temp; y1_temp++){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'a'){
+								pieza_encontrada++;
+							}
+						}
+					}
+
+				x1_temp = x1;
+				x2_temp = x2;
+				y1_temp = y1;
+				y2_temp = y2;
+				
+
+					x1_temp++;
+					y1_temp--;
+					for (x1_temp; x1_temp < x2_temp; x1_temp++){
+						for (y1_temp; y1_temp > y2_temp; y1_temp--){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'a'){
+								pieza_encontrada++;
+							}
+						}
+					}
+				
+				x1_temp = x1;
+				x2_temp = x2;
+				y1_temp = y1;
+				y2_temp = y2;
+
+				
+					x1_temp--;
+					y1_temp++;
+					for (x1_temp; x1_temp > x2_temp; x1_temp--){
+						for (y1_temp; y1_temp < y2_temp; y1_temp++){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'a'){
+								pieza_encontrada++;
+							}
+						}
+					}
+				
+
+				x1_temp = x1;
+				x2_temp = x2;
+				y1_temp = y1;
+				y2_temp = y2;
+				
+					x1_temp--;
+					y1_temp--;
+					for (x1_temp; x1_temp > x2_temp; x1_temp--){
+						for (y1_temp; y1_temp > y2_temp; y1_temp--){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'a'){
+								pieza_encontrada++;
+							}
+						}
+					}
+
+					if ((y2 == y1 + 1) && (x2 < x1 - 1)){
+						pieza_encontrada++;
+					}
+
+					if ((y2 == y1 - 1) && (x2 < x1 - 1)){
+						pieza_encontrada++;
+					}
+				
+
+				if(pieza_encontrada == 0){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();		
+				}
+
+				/*fin jaque*/
 			}
 		}else if (pieza == 'c'){
 			if (mover_caballo(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'c';
 				matriz[x1][y1] = '.';
-				/////////////////////JAQUE
+				/*JAQUE*/
+				for (int i = 0; i < 8; i++){
+					for (int j = 0; j < 8; j++){
+						if (matriz[i][j] == 'R'){
+							x1 = i;
+							y1 = j;
+						}
+					}
+				}//buscar al rey
+
+				if ((x1 - 2 >= 0) && (y1 + 1 <= 7) && (matriz[x1 - 2][y1 + 1] == 'c')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 - 2 >= 0) && (y1 - 1 <= 7) && (matriz[x1 - 2][y1 - 1] == 'c')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 - 1 >= 0) && (y1 + 2 <= 7) && (matriz[x1 - 1][y1 + 2] == 'c')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 - 1 >= 0) && (y1 - 2 >= 0) && (matriz[x1 - 1][y1 - 2] == 'c')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 + 1 <= 7) && (y1 + 2 <= 7) && (matriz[x1 + 1][y1 + 2] == 'c')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 - 1 >= 0) && (y1 - 2 >= 0) && (matriz[x1 - 1][y1 - 2] == 'c')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 + 2 <= 7) && (y1 + 1 <= 7) && (matriz[x1 + 2][y1 + 1] == 'c')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}else if ((x1 + 2 <= 7) && (y1 - 1 >= 0) && (matriz[x1 + 2][y1 - 1] == 'c')){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();
+				}/*fin jaque*/
 			}
 		}else if (pieza == 'd'){
 			if (mover_dama(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'd';
 				matriz[x1][y1] = '.';
-				/////////////////////JAQUE
+				/*JAQUE*/
+				for (int i = 0; i < 8; i++){
+					for (int j = 0; j < 8; j++){
+						if (matriz[i][j] == 'R'){
+							x1 = i;
+							y1 = j;
+						}
+					}
+				}//buscar al rey
+
+				int x1_temp = x1;
+				int x2_temp = x2;
+				int y1_temp = y1;
+				int y2_temp = y2;
+				x1_temp++;
+				y1_temp++;
+				int pieza_encontrada = 0;
+
+				if (y1 == y2 && x1 != x2 && x1 < x2){//verificar si mueve en la misma columna o  misma fila
+					x1_temp++;
+					for (x1_temp; x1_temp < x2_temp; x1_temp++){
+						if (matriz[x1_temp][y1] != '.' && matriz[x1_temp][y1] != 'R'){
+							pieza_encontrada++;
+						}
+					}
+				}
+
+				if ((y1 != y2 && x1 == x2 && y1 < y2)){
+					y1_temp++;
+					for (y1_temp; y1_temp < y2_temp; y1_temp++){
+						if (matriz[x1][y1_temp] != '.' && matriz[x1_temp][y1] != 'R'){
+						pieza_encontrada++;
+						}
+					}
+				}
+
+				if (y1 == y2 && x1 != x2 && x1 > x2){//verificar si mueve en la misma columna o  misma fila
+					x1_temp--;
+					for (x1_temp; x1_temp > x2_temp; x1_temp--){
+						if (matriz[x1_temp][y1] != '.' && matriz[x1_temp][y1] != 'R'){
+							pieza_encontrada++;
+						}
+					}
+				}
+
+				if ((y1 != y2 && x1 == x2 && y1 > y2)){
+					y1_temp--;
+					for (y1_temp; y1_temp > y2_temp; y1_temp--){
+						if (matriz[x1][y1_temp] != '.' && matriz[x1_temp][y1] != 'R'){
+							pieza_encontrada++;
+						}
+					}
+				}
+
+				if (y1 != y2 && x1 != x2){
+					pieza_encontrada++;
+				}
+
+				x1_temp++;
+					y1_temp++;
+					for (x1_temp; x1_temp < x2_temp; x1_temp++){
+						for (y1_temp; y1_temp < y2_temp; y1_temp++){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'R'){
+								pieza_encontrada++;
+							}
+						}
+					}
+
+				x1_temp = x1;
+				x2_temp = x2;
+				y1_temp = y1;
+				y2_temp = y2;
+				
+
+					x1_temp++;
+					y1_temp--;
+					for (x1_temp; x1_temp < x2_temp; x1_temp++){
+						for (y1_temp; y1_temp > y2_temp; y1_temp--){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'R'){
+								pieza_encontrada++;
+							}
+						}
+					}
+				
+				x1_temp = x1;
+				x2_temp = x2;
+				y1_temp = y1;
+				y2_temp = y2;
+
+				
+					x1_temp--;
+					y1_temp++;
+					for (x1_temp; x1_temp > x2_temp; x1_temp--){
+						for (y1_temp; y1_temp < y2_temp; y1_temp++){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'R'){
+								pieza_encontrada++;
+							}
+						}
+					}
+				
+
+				x1_temp = x1;
+				x2_temp = x2;
+				y1_temp = y1;
+				y2_temp = y2;
+				
+					x1_temp--;
+					y1_temp--;
+					for (x1_temp; x1_temp > x2_temp; x1_temp--){
+						for (y1_temp; y1_temp > y2_temp; y1_temp--){
+							if (matriz[x1_temp][y1_temp] != '.' && matriz[x1_temp][y1_temp] != 'R'){
+								pieza_encontrada++;
+							}
+						}
+					}
+
+					if ((y2 == y1 + 1) && (x2 < x1 - 1)){
+						pieza_encontrada++;
+					}
+
+					if ((y2 == y1 - 1) && (x2 < x1 - 1)){
+						pieza_encontrada++;
+					}
+				
+
+				if(pieza_encontrada == 0){
+					move(16, 10);
+					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+					getch();		
+				}
+
+				/*FIN JAQUE REINA*/
 			}
 		}else if (pieza == 'r'){
 			if (mover_rey(x1, y1, x2, y2, matriz, contador_turnos)){
 				matriz[x2][y2] = 'r';
 				matriz[x1][y1] = '.';
 				/////////////////////JAQUE
+
+				for (int i = 0; i < 8; i++){
+					for (int j = 0; j < 8; j++){
+						if (matriz[i][j] == 'R'){
+							x1 = i;
+							y1 = j;
+						}
+					}
+				}//buscar al rey
+
+				if ((x1 + 1 < 8) && (y2 == y1)){
+					if (matriz[x1 + 1][y1] == 'r'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}else if ((x1 - 1 >= 0) && (y2 == y1)){
+					
+					if (matriz[x1 - 1][y1] == 'r'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}				
+				}else if ((y1 + 1 < 8) && (x2 == x1)){
+					if (matriz[x1][y1 + 1] == 'r'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}else if ((x2 == x1) && (y1 - 1 >= 0)){
+					if ((matriz[x1][y1 - 1] == 'r')){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}else if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+					if (matriz[x1 + 1][y1 - 1] == 'r'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}else if ((y1 + 1 < 8) && (x1 + 1 < 8)){
+					if (matriz[x1 + 1][y1 + 1] == 'r'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}else if ((y1 + 1 < 8) && (x1 - 1 >= 0)){
+					if (matriz[x1 - 1][y1 + 1] == 'r'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}else if ((x1 - 1 >= 0) && (y1 - 1 >= 0)){
+					if (matriz[x1 - 1][y1 - 1] == 'r'){
+						move(16, 10);
+						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
+						getch();
+					}
+				}
+				/*fin jaque*/
 			}
 		}
 	}
@@ -740,7 +1416,7 @@ bool mover_torre(int x1, int y1, int x2, int y2, char** matriz, int contador_tur
 }
 
 bool mover_alfil(int x1, int y1, int x2, int y2, char** matriz, int contador_turnos){
-	bool mover;
+	bool mover = false;
 	int pieza_encontrada = 0;
 	int x1_temp = x1;
 	int x2_temp = x2;
@@ -796,42 +1472,46 @@ bool mover_alfil(int x1, int y1, int x2, int y2, char** matriz, int contador_tur
 		}
 	}
 
-	if (y1 == y2 || x1 == x2){
+	if ((y2 == y1 + 1) && (x2 < x1 - 1)){
+		pieza_encontrada++;
+	}
+
+	if ((y2 == y1 - 1) && (x2 < x1 - 1)){
 		pieza_encontrada++;
 	}
 	
 
 	if (contador_turnos % 2 == 0){
 		if (matriz[x2][y2] == 'P'){//verificar que no coma piezas de su mismo color.
-			pieza_encontrada++;
+			pieza_encontrada = pieza_encontrada + 2;
 		}else if (matriz[x2][y2] == 'T'){
-			pieza_encontrada++;
+			pieza_encontrada = pieza_encontrada + 2;
 		}else if (matriz[x2][y2] == 'A'){
-			pieza_encontrada++;
+			pieza_encontrada = pieza_encontrada + 2;
 		}else if (matriz[x2][y2] == 'D'){
-			pieza_encontrada++;
+			pieza_encontrada = pieza_encontrada + 2;
 		}else if (matriz[x2][y2] == 'C'){
-			pieza_encontrada++;
+			pieza_encontrada = pieza_encontrada + 2;
 		}else if (matriz[x2][y2] == 'R'){
-			pieza_encontrada++;
+			pieza_encontrada = pieza_encontrada + 2;
 		}
 	}else{
 		if (matriz[x2][y2] == 'p'){//verificar que no coma piezas de su mismo color.
-			pieza_encontrada++;
+			pieza_encontrada = pieza_encontrada + 2;
 		}else if (matriz[x2][y2] == 't'){
-			pieza_encontrada++;
+			pieza_encontrada = pieza_encontrada + 2;
 		}else if (matriz[x2][y2] == 'a'){
-			pieza_encontrada++;
+			pieza_encontrada = pieza_encontrada + 2;
 		}else if (matriz[x2][y2] == 'd'){
-			pieza_encontrada++;
+			pieza_encontrada = pieza_encontrada + 2;
 		}else if (matriz[x2][y2] == 'c'){
-			pieza_encontrada++;
+			pieza_encontrada = pieza_encontrada + 2;
 		}else if (matriz[x2][y2] == 'r'){
-			pieza_encontrada++;
+			pieza_encontrada = pieza_encontrada + 2;
 		}
 	}	
 
-	if(pieza_encontrada == 0){
+	if(pieza_encontrada < 2){
 		mover = true;		
 	}else{
 		mover = false;
@@ -898,32 +1578,59 @@ bool mover_caballo(int x1, int y1, int x2, int y2, char** matriz, int contador_t
 
 bool mover_dama(int x1, int y1, int x2, int y2, char** matriz, int contador_turnos){
 	bool mover = false;
-	int pieza_encontrada = 1;
+	bool mover_como_alfil = false;
+	int pieza_encontrada = 0;
 	int x1_temp = x1;
 	int x2_temp = x2;
 	int y1_temp = y1;
 	int y2_temp = y2;
-	x1_temp++;
-	y1_temp++;
+		
 
-	
-
-	if ((y1 == y2 && x1 != x2) || (y1 != y2 && x1 == x2)){//verificar si mueve en la misma columna o  misma fila
+	if (y1 == y2 && x1 != x2 && x1 < x2){//verificar si mueve en la misma columna o  misma fila
+		x1_temp++;
 		for (x1_temp; x1_temp < x2_temp; x1_temp++){
 			if (matriz[x1_temp][y1] != '.'){
 				pieza_encontrada++;
 			}
 		}
+	}
 
+	if ((y1 != y2 && x1 == x2 && y1 < y2)){
+		y1_temp++;
 		for (y1_temp; y1_temp < y2_temp; y1_temp++){
 			if (matriz[x1][y1_temp] != '.'){
 				pieza_encontrada++;
 			}
 		}
-		pieza_encontrada--;
 	}
 
-	if (y1 != y2 && x1 != x2){
+	if (y1 == y2 && x1 != x2 && x1 > x2){//verificar si mueve en la misma columna o  misma fila
+		x1_temp--;
+		for (x1_temp; x1_temp > x2_temp; x1_temp--){
+			if (matriz[x1_temp][y1] != '.'){
+				pieza_encontrada++;
+			}
+		}
+	}
+
+	if ((y1 != y2 && x1 == x2 && y1 > y2)){
+		y1_temp--;
+		for (y1_temp; y1_temp > y2_temp; y1_temp--){
+			if (matriz[x1][y1_temp] != '.'){
+				pieza_encontrada++;
+			}
+		}
+	}
+
+	if (x1 != x2 && y1 != y2){
+		pieza_encontrada++;
+	}
+
+	if (x2 != x1 && y1 != y2){
+		mover_como_alfil = true;
+		if (x2 > x1 && y2 > y1){
+		x1_temp++;
+		y1_temp++;
 		for (x1_temp; x1_temp < x2_temp; x1_temp++){
 			for (y1_temp; y1_temp < y2_temp; y1_temp++){
 				if (matriz[x1_temp][y1_temp] != '.'){
@@ -931,8 +1638,46 @@ bool mover_dama(int x1, int y1, int x2, int y2, char** matriz, int contador_turn
 				}
 			}
 		}
-		pieza_encontrada--;
 	}
+
+	if (x2 > x1 && y2 < y1){
+		x1_temp++;
+		y1_temp--;
+		for (x1_temp; x1_temp < x2_temp; x1_temp++){
+			for (y1_temp; y1_temp > y2_temp; y1_temp--){
+				if (matriz[x1_temp][y1_temp] != '.'){
+				pieza_encontrada++;
+				}
+			}
+		}
+	}
+
+	if (x2 < x1 && y2 > y1){
+		x1_temp--;
+		y1_temp++;
+		for (x1_temp; x1_temp > x2_temp; x1_temp--){
+			for (y1_temp; y1_temp < y2_temp; y1_temp++){
+				if (matriz[x1_temp][y1_temp] != '.'){
+				pieza_encontrada++;
+				}
+			}
+		}
+	}
+
+	if (x2 < x1 && y2 < y1){
+		x1_temp--;
+		y1_temp--;
+		for (x1_temp; x1_temp > x2_temp; x1_temp--){
+			for (y1_temp; y1_temp > y2_temp; y1_temp--){
+				if (matriz[x1_temp][y1_temp] != '.'){
+				pieza_encontrada++;
+				}
+			}
+		}
+	}
+	}
+
+	
 
 	if (contador_turnos % 2 == 0){
 		if (matriz[x2][y2] == 'P'){//verificar que no coma piezas de su mismo color.
@@ -964,12 +1709,13 @@ bool mover_dama(int x1, int y1, int x2, int y2, char** matriz, int contador_turn
 		}
 	}
 
-		if(pieza_encontrada == 0){
-			mover = true;		
-		}else{
-			mover = false;
-		}	
+	if((pieza_encontrada < 2 && mover_como_alfil == true) || (pieza_encontrada == 0)){
+		mover = true;		
+	}else{
+		mover = false;
+	}
 
+		
 	return mover;
 }
 
