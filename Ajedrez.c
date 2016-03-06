@@ -844,7 +844,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 				matriz[x1][y1] = '.';
 				/////////////////////JAQUE
 
-				if (x2 == 7){
+				if (x2 == 0){
 					char pieza_nueva;
 					move(16, 10);
   					addstr("Ingrese pieza a cambiar por peon: ");
