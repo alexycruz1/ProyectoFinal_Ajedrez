@@ -12,10 +12,17 @@ int main(){
 
 	cout << "Ingrese el movimiento: ";
 	cin >> movement;
-	cout << movement;
 	cout << endl;
 
 	verificar_pieza(movement, size, 2);
+
+	for (int i = 0; i < 8; ++i){
+		if (i == 0){
+			cout << "Bien hecho";
+		}else{
+			break;
+		}
+	}
 	
 
 	return 0;
@@ -24,7 +31,6 @@ int main(){
 bool verificar_pieza(char movement[], int size, int contador_turnos){//65 a 72 de la A a la H == 97 a 104 minusculas
 	int x1, y1, x2, y2;
 
-	if (contador_turnos % 2 == 0){//pieza debe ser mayuscula, turno jugador 1
 		x1 = movement[0];
 		y1 = movement[1];
 		x2 = movement[2];
@@ -41,7 +47,7 @@ bool verificar_pieza(char movement[], int size, int contador_turnos){//65 a 72 d
 		cout << endl;
 
 		cout << x1 << "-" << y1 << "-" << x2 << "-" << y2;
-	}
+	
 }
 
 /*	   A  B  C  D  E  F  G  H

@@ -15,6 +15,7 @@ bool mover_alfil(int, int, int, int, char**, int);
 bool mover_caballo(int, int, int, int, char**, int);
 bool mover_dama(int, int, int, int, char**, int);
 bool mover_rey(int, int, int, int, char**, int);
+void jaque_mate(int, int, char**, int);
 
 
 int main(int argc, char*argv[]){
@@ -354,8 +355,11 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 					move(16, 10);
   					addstr("Ingrese pieza a cambiar por peon: ");
   					pieza_nueva = getch();
-  					matriz[x2][y2] = pieza_nueva;//falta validar pieza
-					matriz[x1][y1] = '.';
+  					int revisar_char = pieza_nueva;
+  					if ((revisar_char == 65) || (revisar_char == 67) || (revisar_char == 80) || (revisar_char == 84) || (revisar_char == 68)){
+  						matriz[x2][y2] = pieza_nueva;
+						matriz[x1][y1] = '.';
+  					}
 				}
 				/*JAQUE*/
 				for (int i = 0; i < 8; i++){
@@ -372,6 +376,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 					
 				}else if ((x1 - 1 >= 0) && (y1 - 1 >= 0)){
@@ -379,6 +384,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}
 				/*fin jaque*/
@@ -451,6 +457,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 			move(16, 10);
 			printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 			getch();	
+			jaque_mate(x1, x2, matriz, contador_turnos);
 		}
 				/*fin jaque*/
 			}
@@ -540,12 +547,21 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 					if ((y2 == y1 - 1) && (x2 < x1 - 1)){
 						pieza_encontrada++;
 					}
+
+					if (y2 == y1 + 1 && x2 > x1 - 1){
+						pieza_encontrada++;
+					}
+
+					if (y2 == y1){
+						pieza_encontrada++;
+					}
 				
 
 				if(pieza_encontrada == 0){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();		
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}
 
 				/*fin jaque*/
@@ -568,34 +584,42 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 - 2 >= 0) && (y1 - 1 <= 7) && (matriz[x1 - 2][y1 - 1] == 'C')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 - 1 >= 0) && (y1 + 2 <= 7) && (matriz[x1 - 1][y1 + 2] == 'C')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 - 1 >= 0) && (y1 - 2 >= 0) && (matriz[x1 - 1][y1 - 2] == 'C')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 + 1 <= 7) && (y1 + 2 <= 7) && (matriz[x1 + 1][y1 + 2] == 'C')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 - 1 >= 0) && (y1 - 2 >= 0) && (matriz[x1 - 1][y1 - 2] == 'C')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 + 2 <= 7) && (y1 + 1 <= 7) && (matriz[x1 + 2][y1 + 1] == 'C')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 + 2 <= 7) && (y1 - 1 >= 0) && (matriz[x1 + 2][y1 - 1] == 'C')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}/*fin jaque*/
 
 			}
@@ -732,7 +756,8 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 				if(pieza_encontrada == 0){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
-					getch();		
+					getch();	
+					jaque_mate(x1, x2, matriz, contador_turnos);	
 				}
 
 				/*FIN JAQUE REINA*/
@@ -757,6 +782,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x1 - 1 >= 0) && (y2 == y1)){
 					
@@ -764,42 +790,49 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}				
 				}else if ((y1 + 1 < 8) && (x2 == x1)){
 					if (matriz[x1][y1 + 1] == 'R'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x2 == x1) && (y1 - 1 >= 0)){
 					if ((matriz[x1][y1 - 1] == 'R')){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
 					if (matriz[x1 + 1][y1 - 1] == 'R'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((y1 + 1 < 8) && (x1 + 1 < 8)){
 					if (matriz[x1 + 1][y1 + 1] == 'R'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((y1 + 1 < 8) && (x1 - 1 >= 0)){
 					if (matriz[x1 - 1][y1 + 1] == 'R'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x1 - 1 >= 0) && (y1 - 1 >= 0)){
 					if (matriz[x1 - 1][y1 - 1] == 'R'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}
 			}
@@ -810,6 +843,18 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 				matriz[x2][y2] = 'p';
 				matriz[x1][y1] = '.';
 				/////////////////////JAQUE
+
+				if (x2 == 7){
+					char pieza_nueva;
+					move(16, 10);
+  					addstr("Ingrese pieza a cambiar por peon: ");
+  					pieza_nueva = getch();
+  					int revisar_char = pieza_nueva;
+  					if ((revisar_char == 97) || (revisar_char == 99) || (revisar_char == 112) || (revisar_char == 116) || (revisar_char == 100)){
+  						matriz[x2][y2] = pieza_nueva;
+						matriz[x1][y1] = '.';
+  					}
+				}
 
 				/*JAQUE*/
 				for (int i = 0; i < 8; i++){
@@ -826,6 +871,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 					
 				}else if ((x1 + 1 < 8) && (y1 + 1 < 8)){
@@ -833,6 +879,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}
 				/*fin jaque*/
@@ -905,6 +952,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 			move(16, 10);
 			printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 			getch();	
+			jaque_mate(x1, x2, matriz, contador_turnos);
 		}
 		/*fin jaque*/
 			}
@@ -994,12 +1042,25 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 					if ((y2 == y1 - 1) && (x2 < x1 - 1)){
 						pieza_encontrada++;
 					}
+
+					if (y2 == y1 + 1 && x2 > x1 - 1){
+						pieza_encontrada++;
+					}
+
+					if (y2 == y1){
+						pieza_encontrada++;
+					}
+
+					if (y1 == y2 + 1 && x1 < x2 - 1){
+						pieza_encontrada++;
+					}
 				
 
 				if(pieza_encontrada == 0){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
-					getch();		
+					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);		
 				}
 
 				/*fin jaque*/
@@ -1022,34 +1083,42 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 - 2 >= 0) && (y1 - 1 <= 7) && (matriz[x1 - 2][y1 - 1] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 - 1 >= 0) && (y1 + 2 <= 7) && (matriz[x1 - 1][y1 + 2] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 - 1 >= 0) && (y1 - 2 >= 0) && (matriz[x1 - 1][y1 - 2] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 + 1 <= 7) && (y1 + 2 <= 7) && (matriz[x1 + 1][y1 + 2] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 - 1 >= 0) && (y1 - 2 >= 0) && (matriz[x1 - 1][y1 - 2] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 + 2 <= 7) && (y1 + 1 <= 7) && (matriz[x1 + 2][y1 + 1] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 + 2 <= 7) && (y1 - 1 >= 0) && (matriz[x1 + 2][y1 - 1] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
+					jaque_mate(x1, x2, matriz, contador_turnos);
 				}/*fin jaque*/
 			}
 		}else if (pieza == 'd'){
@@ -1184,7 +1253,8 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 				if(pieza_encontrada == 0){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
-					getch();		
+					getch();	
+					jaque_mate(x1, x2, matriz, contador_turnos);	
 				}
 
 				/*FIN JAQUE REINA*/
@@ -1209,6 +1279,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x1 - 1 >= 0) && (y2 == y1)){
 					
@@ -1216,42 +1287,49 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}				
 				}else if ((y1 + 1 < 8) && (x2 == x1)){
 					if (matriz[x1][y1 + 1] == 'r'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x2 == x1) && (y1 - 1 >= 0)){
 					if ((matriz[x1][y1 - 1] == 'r')){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
 					if (matriz[x1 + 1][y1 - 1] == 'r'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((y1 + 1 < 8) && (x1 + 1 < 8)){
 					if (matriz[x1 + 1][y1 + 1] == 'r'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((y1 + 1 < 8) && (x1 - 1 >= 0)){
 					if (matriz[x1 - 1][y1 + 1] == 'r'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x1 - 1 >= 0) && (y1 - 1 >= 0)){
 					if (matriz[x1 - 1][y1 - 1] == 'r'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
+						jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}
 				/*fin jaque*/
@@ -1478,6 +1556,10 @@ bool mover_alfil(int x1, int y1, int x2, int y2, char** matriz, int contador_tur
 
 	if ((y2 == y1 - 1) && (x2 < x1 - 1)){
 		pieza_encontrada++;
+	}
+
+	if (y2 == y1){
+		pieza_encontrada = pieza_encontrada + 2;
 	}
 	
 
@@ -1775,10 +1857,4070 @@ bool mover_rey(int x1, int y1, int x2, int y2, char** matriz, int contador_turno
 	return mover;
 }
 
+void jaque_mate(int x, int y, char** matriz, int contador_turnos){
+
+	/****************comienzo de jaque mate*****************/
+	/****************verificar jugador 1 esta en mate*****************/
+	if (contador_turnos % 2 != 0){
+		/*primer par de coordenadas*/
+		int x1 = x - 1;
+		int y1 = y - 1;
+		/*-------------------------*/
+		int pieza_encontrada = 0;
+		if (x1 >= 0 && y1 >= 0){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de primera posicion*/
+
+		/*segundo par de coordenadas*/
+		x1 = x;
+		y1 = y - 1;
+		/*-------------------------*/
+		if (y1 >= 0){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de segunda posicion*/
+
+		/*tercer par de coordenadas*/
+		x1 = x + 1;
+		y1 = y - 1;
+		/*-------------------------*/
+		if (x1 < 8 && y1 >= 0){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de tercera posicion*/
+
+		/*cuarto par de coordenadas*/
+		x1 = x - 1;
+		y1 = y;
+		/*-------------------------*/
+		if (x1 >= 0){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de cuarta posicion*/
+
+		/*quinto par de coordenadas*/
+		x1 = x + 1;
+		y1 = y;
+		/*-------------------------*/
+		if (x1 < 8){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de quinta posicion*/
+
+
+		/*sexto par de coordenadas*/
+		x1 = x - 1;
+		y1 = y + 1;
+		/*-------------------------*/
+		if (x1 >= 0 && y1 < 8){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de sexta posicion*/
+
+		/*septimo par de coordenadas*/
+		x1 = x;
+		y1 = y + 1;
+		/*-------------------------*/
+		if (y1 < 8){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de septima posicion*/
+
+		/*octavo par de coordenadas*/
+		x1 = x + 1;
+		y1 = y + 1;
+		/*-------------------------*/
+		if (x1 < 8 && y1 < 8){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'p'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 't'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'a'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'c'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'c'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'r'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'r'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de octava posicion*/
+
+			/*si hay jaque mate*/
+		if (pieza_encontrada >= 8){
+			move(16, 10);
+			printw("JAQUE MATE!");
+			getch();
+		}
+	}/*fin de jugador numero 1*/
+
+	if (contador_turnos % 2 == 0){
+		/*primer par de coordenadas*/
+		int x1 = x - 1;
+		int y1 = y - 1;
+		/*-------------------------*/
+		int pieza_encontrada = 0;
+		if (x1 >= 0 && y1 >= 0){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de primera posicion*/
+
+		/*segundo par de coordenadas*/
+		x1 = x;
+		y1 = y - 1;
+		/*-------------------------*/
+		if (y1 >= 0){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de segunda posicion*/
+
+		/*tercer par de coordenadas*/
+		x1 = x + 1;
+		y1 = y - 1;
+		/*-------------------------*/
+		if (x1 < 8 && y1 >= 0){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de tercera posicion*/
+
+		/*cuarto par de coordenadas*/
+		x1 = x - 1;
+		y1 = y;
+		/*-------------------------*/
+		if (x1 >= 0){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de cuarta posicion*/
+
+		/*quinto par de coordenadas*/
+		x1 = x + 1;
+		y1 = y;
+		/*-------------------------*/
+		if (x1 < 8){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'A'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'A'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'A'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'A'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'A'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'A'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'A'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de quinta posicion*/
+
+
+		/*sexto par de coordenadas*/
+		x1 = x - 1;
+		y1 = y + 1;
+		/*-------------------------*/
+		if (x1 >= 0 && y1 < 8){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de sexta posicion*/
+
+		/*septimo par de coordenadas*/
+		x1 = x;
+		y1 = y + 1;
+		/*-------------------------*/
+		if (y1 < 8){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de septima posicion*/
+
+		/*octavo par de coordenadas*/
+		x1 = x + 1;
+		y1 = y + 1;
+		/*-------------------------*/
+		if (x1 < 8 && y1 < 8){
+			/*ver si hay peones*/
+			if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 1][y1 - 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			if ((x1 + 1 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 + 1] == 'P'){
+					pieza_encontrada++;
+				}
+			}
+
+			/*ver si hay torres*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'T'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			/*ver si hay alfil*/
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'A'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si hay caballos*/
+			if ((x1 + 2 < 8) && (y1 + 1 < 8)){
+				if (matriz[x1 + 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 1 < 8) && (y1 + 2 < 8)){
+				if (matriz[x1 + 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 + 2 < 8) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 + 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 + 1 < 8)){
+				if (matriz[x1 - 2][y1 + 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 - 2 >= 0) && (y1 - 1 >= 0)){
+				if (matriz[x1 - 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 - 1 >= 0)){
+				if (matriz[x1 - 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((y1 - 2 >= 0) && (x1 + 1 < 8)){
+				if (matriz[x1 + 1][y1 - 2] == 'C'){
+					pieza_encontrada++;
+				}
+			}else if ((x1 + 2 < 8) && (y1 - 1 >= 0)){
+				if (matriz[x1 + 2][y1 - 1] == 'C'){
+					pieza_encontrada++;
+				}
+			}else{
+				pieza_encontrada--;
+			}
+
+			/*ver si hay reina*/
+			for (x1; x1 < 8; x1++){
+				if (matriz[x1][y1] == '.'){
+					x1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				if (matriz[x1][y1] == '.'){
+					x1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 >= 0; y1--){
+				if (matriz[x1][y1] == '.'){
+					y1--;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (y1; y1 < 8; y1++){
+				if (matriz[x1][y1] == '.'){
+					y1++;
+				}else if (matriz[x1][y1] == 'D'){
+					pieza_encontrada++;
+				}else{
+					break;
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 < 8; y1++){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1++;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 >= 0; x1--){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1--;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			for (x1; x1 < 8; x1++){
+				for (y1; y1 >= 0; y1--){
+					if (matriz[x1][y1] == '.'){
+						x1++;
+						y1--;
+					}else if (matriz[x1][y1] == 'D'){
+						pieza_encontrada++;
+					}else{
+						break;
+					}
+				}
+			}
+
+			/*ver si esa posicion esta disponible*/
+			if (matriz[x1][y1] != '.'){
+				pieza_encontrada++;
+			}
+
+
+		}else{//si no se puede mover a posicion
+			pieza_encontrada++;
+		}/*fin de octava posicion*/
+
+			/*si hay jaque mate*/
+		if (pieza_encontrada >= 8){
+			move(16, 10);
+			printw("JAQUE MATE!");
+			getch();
+		}
+	}/*fin de jugador numero 1*/
+		
+}
 
 
 
-//gcc -o aje Ajedrez.c -lncurses 5-5-7-4
+
+//gcc -o aje Ajedrez.c -lncurses
 
 /*	   A  B  C  D  E  F  G  H
 	8 [T][C][A][D][R][A][C][T] 8
