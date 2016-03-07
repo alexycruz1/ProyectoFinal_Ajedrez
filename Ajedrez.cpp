@@ -409,7 +409,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 					
 				}else if ((x1 - 1 >= 0) && (y1 - 1 >= 0)){
@@ -417,7 +417,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}
 				/*fin jaque*/
@@ -490,7 +490,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 			move(16, 10);
 			printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 			getch();	
-			jaque_mate(x1, x2, matriz, contador_turnos);
+			//jaque_mate(x1, x2, matriz, contador_turnos);
 		}
 				/*fin jaque*/
 			}
@@ -594,7 +594,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();		
-					jaque_mate(x1, x2, matriz, contador_turnos);
+					//jaque_mate(x1, x2, matriz, contador_turnos);
 				}
 
 				/*fin jaque*/
@@ -790,7 +790,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();	
-					jaque_mate(x1, x2, matriz, contador_turnos);	
+					//jaque_mate(x1, x2, matriz, contador_turnos);	
 				}
 
 				/*FIN JAQUE REINA*/
@@ -815,7 +815,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x1 - 1 >= 0) && (y2 == y1)){
 					
@@ -823,49 +823,49 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}				
 				}else if ((y1 + 1 < 8) && (x2 == x1)){
 					if (matriz[x1][y1 + 1] == 'R'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x2 == x1) && (y1 - 1 >= 0)){
 					if ((matriz[x1][y1 - 1] == 'R')){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
 					if (matriz[x1 + 1][y1 - 1] == 'R'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((y1 + 1 < 8) && (x1 + 1 < 8)){
 					if (matriz[x1 + 1][y1 + 1] == 'R'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((y1 + 1 < 8) && (x1 - 1 >= 0)){
 					if (matriz[x1 - 1][y1 + 1] == 'R'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x1 - 1 >= 0) && (y1 - 1 >= 0)){
 					if (matriz[x1 - 1][y1 - 1] == 'R'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}
 			}
@@ -904,7 +904,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 					
 				}else if ((x1 + 1 < 8) && (y1 + 1 < 8)){
@@ -912,7 +912,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}
 				/*fin jaque*/
@@ -985,7 +985,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 			move(16, 10);
 			printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 			getch();	
-			jaque_mate(x1, x2, matriz, contador_turnos);
+			//jaque_mate(x1, x2, matriz, contador_turnos);
 		}
 		/*fin jaque*/
 			}
@@ -1093,7 +1093,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
-					jaque_mate(x1, x2, matriz, contador_turnos);		
+					//jaque_mate(x1, x2, matriz, contador_turnos);		
 				}
 
 				/*fin jaque*/
@@ -1116,42 +1116,42 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
-					jaque_mate(x1, x2, matriz, contador_turnos);
+					//jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 - 2 >= 0) && (y1 - 1 <= 7) && (matriz[x1 - 2][y1 - 1] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
-					jaque_mate(x1, x2, matriz, contador_turnos);
+					//jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 - 1 >= 0) && (y1 + 2 <= 7) && (matriz[x1 - 1][y1 + 2] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
-					jaque_mate(x1, x2, matriz, contador_turnos);
+					//jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 - 1 >= 0) && (y1 - 2 >= 0) && (matriz[x1 - 1][y1 - 2] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
-					jaque_mate(x1, x2, matriz, contador_turnos);
+					//jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 + 1 <= 7) && (y1 + 2 <= 7) && (matriz[x1 + 1][y1 + 2] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
-					jaque_mate(x1, x2, matriz, contador_turnos);
+					//jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 - 1 >= 0) && (y1 - 2 >= 0) && (matriz[x1 - 1][y1 - 2] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
-					jaque_mate(x1, x2, matriz, contador_turnos);
+					//jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 + 2 <= 7) && (y1 + 1 <= 7) && (matriz[x1 + 2][y1 + 1] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
-					jaque_mate(x1, x2, matriz, contador_turnos);
+					//jaque_mate(x1, x2, matriz, contador_turnos);
 				}else if ((x1 + 2 <= 7) && (y1 - 1 >= 0) && (matriz[x1 + 2][y1 - 1] == 'c')){
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();
-					jaque_mate(x1, x2, matriz, contador_turnos);
+					//jaque_mate(x1, x2, matriz, contador_turnos);
 				}/*fin jaque*/
 			}
 		}else if (pieza == 'd'){
@@ -1287,7 +1287,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 					move(16, 10);
 					printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 					getch();	
-					jaque_mate(x1, x2, matriz, contador_turnos);	
+					//jaque_mate(x1, x2, matriz, contador_turnos);	
 				}
 
 				/*FIN JAQUE REINA*/
@@ -1312,7 +1312,7 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x1 - 1 >= 0) && (y2 == y1)){
 					
@@ -1320,49 +1320,49 @@ void mover(int x1, int y1, int x2, int y2, char pieza, char** matriz, int contad
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}				
 				}else if ((y1 + 1 < 8) && (x2 == x1)){
 					if (matriz[x1][y1 + 1] == 'r'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x2 == x1) && (y1 - 1 >= 0)){
 					if ((matriz[x1][y1 - 1] == 'r')){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x1 + 1 < 8) && (y1 - 1 >= 0)){
 					if (matriz[x1 + 1][y1 - 1] == 'r'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((y1 + 1 < 8) && (x1 + 1 < 8)){
 					if (matriz[x1 + 1][y1 + 1] == 'r'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((y1 + 1 < 8) && (x1 - 1 >= 0)){
 					if (matriz[x1 - 1][y1 + 1] == 'r'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}else if ((x1 - 1 >= 0) && (y1 - 1 >= 0)){
 					if (matriz[x1 - 1][y1 - 1] == 'r'){
 						move(16, 10);
 						printw("HAS PUESTO A TU ADVERSARIO EN JAQUE");
 						getch();
-						jaque_mate(x1, x2, matriz, contador_turnos);
+						//jaque_mate(x1, x2, matriz, contador_turnos);
 					}
 				}
 				/*fin jaque*/
