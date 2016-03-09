@@ -43,7 +43,7 @@ int main(int argc, char*argv[]){
 
 	llenar_tablero(matriz);
 
-	while(ganador){
+	while(ganador == 1){
 		int y = 10;
 		int x = 5;
 		clear();
@@ -154,7 +154,34 @@ int main(int argc, char*argv[]){
   		}
   		refresh();
 
-  		contador_turnos++;	
+  		contador_turnos++;
+
+  		int jugador_1 = 0;
+  		int jugador_2 = 0;
+  		for (int i = 0; i < size; i++){
+  			for (int j = 0; j < size; j++){
+  				if (matriz[i][j] == 'R'){
+  					jugador_1 = 1;
+  				}
+
+  				if (matriz[i][j] == 'r'){
+  					jugador_2 = 1;
+  				}
+  			}
+  		}
+
+  		if ((jugador_1 == 1) && (jugador_2 == 0)){
+  			move(1, 10);
+  			printw("El ganador es el jugador #1");
+  			getch();
+  			ganador = 0;
+  		}else if ((jugador_1 == 0) && (jugador_2 == 1)){
+  			move(1, 10);
+  			printw("El ganador es el jugador #2");
+  			getch();
+  			ganador = 0;
+  		}
+
 		}else{
 			initscr();
   			(void)echo();
@@ -258,6 +285,33 @@ int main(int argc, char*argv[]){
   		refresh();
   		
   		contador_turnos++;
+
+  		int jugador_1 = 0;
+  		int jugador_2 = 0;
+  		for (int i = 0; i < size; i++){
+  			for (int j = 0; j < size; j++){
+  				if (matriz[i][j] == 'R'){
+  					jugador_1 = 1;
+  				}
+
+  				if (matriz[i][j] == 'r'){
+  					jugador_2 = 1;
+  				}
+  			}
+  		}
+
+  		if ((jugador_1 == 1) && (jugador_2 == 0)){
+  			move(1, 10);
+  			printw("El ganador es el jugador #1");
+  			getch();
+  			ganador = 0;
+  		}else if ((jugador_1 == 0) && (jugador_2 == 1)){
+  			move(1, 10);
+  			printw("El ganador es el jugador #2");
+  			getch();
+  			ganador = 0;
+  		}
+
 		}
 	}
 
